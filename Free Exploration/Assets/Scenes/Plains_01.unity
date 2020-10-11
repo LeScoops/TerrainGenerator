@@ -298,13 +298,13 @@ MonoBehaviour:
   terrain: {fileID: 1622005358}
   terrainData: {fileID: 15600000, guid: d87aa7f791dc2f84cb3efee375aaae94, type: 2}
   randomHeightRange: {x: 0, y: 0.01}
-  resetTerrain: 1
+  resetTerrain: 0
   perlinXScale: 0.005
   perlinYScale: 0.005
   perlinOffsetX: 0
   perlinOffsetY: 0
-  perlinOctaves: 3
-  perlinPersistance: 3.87
+  perlinOctaves: 2
+  perlinPersistance: 3
   perlinHeightScale: 0.1
   perlinParameters:
   - mPerlinXScale: 0.01
@@ -315,6 +315,12 @@ MonoBehaviour:
     mPerlinPersistance: 8
     mPerlinHeightScale: 0.09
     remove: 0
+  vPeakCount: 4
+  vFallOff: 0.98
+  vDropOff: 9.7
+  vMinHeight: 0.25
+  vMaxHeight: 0.4
+  voronoiType: 2
 --- !u!1 &2074494351
 GameObject:
   m_ObjectHideFlags: 0

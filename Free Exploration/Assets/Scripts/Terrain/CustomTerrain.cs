@@ -37,31 +37,12 @@ public class CustomTerrain : MonoBehaviour
         public float mPerlinHeightScale = 0.09f;
         public bool remove = false;
     }
-
     public List<PerlinParameters> perlinParameters = new List<PerlinParameters>()
     {
         new PerlinParameters()
     };
 
-    private void Awake()
-    {
-        SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
-        SerializedProperty tagsProp = tagManager.FindProperty("tags");
-
-        AddTag(tagsProp, "Terrain");
-        AddTag(tagsProp, "Cloud");
-        AddTag(tagsProp, "Shore");
-
-        tagManager.ApplyModifiedProperties();
-        this.gameObject.tag = "Terrain";
-    }
-
-    private void OnEnable()
-    {
-        terrain = this.GetComponent<Terrain>();
-        terrainData = terrain.terrainData;
-    } 
-
+    // Single Perlin --------------------------------
     public void Perlin()
     {
         float[,] heightMap = GetHeightMap();
@@ -76,6 +57,7 @@ public class CustomTerrain : MonoBehaviour
         terrainData.SetHeights(0, 0, heightMap);
     }
 
+    // Multiple Perlin -------------------------------
     public void MultiplePerlinTerrain()
     {
         float[,] heightMap = GetHeightMap();
@@ -93,12 +75,10 @@ public class CustomTerrain : MonoBehaviour
         }
         terrainData.SetHeights(0, 0, heightMap);
     }
-
     public void AddNewPerlin()
     {
         perlinParameters.Add(new PerlinParameters());
     }
-
     public void RemovePerlin()
     {
         List<PerlinParameters> keptPerlinParameters = new List<PerlinParameters>();
@@ -116,6 +96,7 @@ public class CustomTerrain : MonoBehaviour
         perlinParameters = keptPerlinParameters;
     }
 
+    // Random Terrain ---------------------------------
     public void RandomTerrain()
     {
         float[,] heightMap = GetHeightMap();
@@ -124,6 +105,92 @@ public class CustomTerrain : MonoBehaviour
             for (int z = 0; z < terrainData.heightmapResolution; z++)
             {
                 heightMap[x, z] += UnityEngine.Random.Range(randomHeightRange.x, randomHeightRange.y);
+            }
+        }
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    // Voronoi -----------------------
+    public int vPeakCount = 3;
+    public float vFallOff = 0.2f;
+    public float vDropOff = 0.6f;
+    public float vMinHeight = 0.25f;
+    public float vMaxHeight = 0.4f;
+    public enum VoronoiType { Linear, Power, Combined, SinPow};
+    public VoronoiType voronoiType = VoronoiType.Linear;
+
+    private void Awake()
+    {
+        SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+        SerializedProperty tagsProp = tagManager.FindProperty("tags");
+
+        AddTag(tagsProp, "Terrain");
+        AddTag(tagsProp, "Cloud");
+        AddTag(tagsProp, "Shore");
+
+        tagManager.ApplyModifiedProperties();
+        this.gameObject.tag = "Terrain";
+    }
+    private void OnEnable()
+    {
+        terrain = this.GetComponent<Terrain>();
+        terrainData = terrain.terrainData;
+    }
+
+    // Voronoi ----------------------------------------
+    public void Voronoi()
+    {
+        float[,] heightMap = GetHeightMap();
+        for (int p = 0; p < vPeakCount; p++)
+        {
+            Vector3 peak = new Vector3(UnityEngine.Random.Range(0, terrainData.heightmapResolution),
+                                       UnityEngine.Random.Range(vMinHeight, vMaxHeight),
+                                       UnityEngine.Random.Range(0, terrainData.heightmapResolution));
+
+            if (heightMap[(int)peak.x, (int)peak.z] < peak.y)
+            {
+                heightMap[(int)peak.x, (int)peak.z] = peak.y;
+            }
+            else
+            {
+                continue;
+            }
+
+            Vector2 peakLocation = new Vector2(peak.x, peak.z);
+            float maxDistance = Vector2.Distance(new Vector2(0, 0), new Vector2(terrainData.heightmapResolution, terrainData.heightmapResolution));
+
+            for (int y = 0; y < terrainData.heightmapResolution; y++)
+            {
+                for (int x = 0; x < terrainData.heightmapResolution; x++)
+                {
+                    if (!(x == peak.x && y == peak.z))
+                    {
+                        float distanceToPeak = Vector2.Distance(peakLocation, new Vector2(x, y)) / maxDistance;
+                        float height;
+                        if (voronoiType == VoronoiType.Combined)
+                        {
+                            height = peak.y - distanceToPeak * vFallOff - Mathf.Pow(distanceToPeak, vDropOff);
+                        }
+                        else if (voronoiType == VoronoiType.Power)
+                        {
+                            height = peak.y - Mathf.Pow(distanceToPeak, vDropOff) * vFallOff;
+                        }
+                        else if (voronoiType == VoronoiType.SinPow)
+                        {
+                            height = peak.y - Mathf.Pow(distanceToPeak * 3, vFallOff) -
+                                Mathf.Sin(distanceToPeak * 2 * Mathf.PI) / vDropOff;
+                        }
+                        else
+                        {
+                            height = peak.y - distanceToPeak * vFallOff;
+                        }
+
+                        if (heightMap[x, y] < height)
+                        {
+                            heightMap[x, y] = height;
+                        }
+                    }
+                }
             }
         }
         terrainData.SetHeights(0, 0, heightMap);
