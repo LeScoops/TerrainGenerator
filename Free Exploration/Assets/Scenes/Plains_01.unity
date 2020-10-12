@@ -321,6 +321,11 @@ MonoBehaviour:
   vMinHeight: 0.25
   vMaxHeight: 0.4
   voronoiType: 2
+  mpdHeightMin: -5
+  mpdHeightMax: 5
+  mpdHeightDampenerPower: 2
+  mpdRoughness: 2
+  smoothIterations: 10
 --- !u!1 &2074494351
 GameObject:
   m_ObjectHideFlags: 0

@@ -31,11 +31,22 @@ public class CustomTerrainEditor : Editor
     SerializedProperty vMaxHeight;
     SerializedProperty voronoiType;
 
+    // Midpoint Displacement -------
+    SerializedProperty mpdHeightMin;
+    SerializedProperty mpdHeightMax;
+    SerializedProperty mpdHeightDampenerPower;
+    SerializedProperty mpdRoughness;
+
+    // Smooth ----------------------
+    SerializedProperty smoothIterations;
+
     // Fold outs ----------
     bool showRandom = false;
     bool showPerlin = false;
     bool showMultiplePerlin = false;
     bool showVoronoi = false;
+    bool showMPD = false;
+    bool showSmooth = false;
 
     private void OnEnable()
     {
@@ -57,6 +68,13 @@ public class CustomTerrainEditor : Editor
         vMinHeight = serializedObject.FindProperty("vMinHeight");
         vMaxHeight = serializedObject.FindProperty("vMaxHeight");
         voronoiType = serializedObject.FindProperty("voronoiType");
+
+        mpdHeightMin = serializedObject.FindProperty("mpdHeightMin");
+        mpdHeightMax = serializedObject.FindProperty("mpdHeightMax");
+        mpdHeightDampenerPower = serializedObject.FindProperty("mpdHeightDampenerPower");
+        mpdRoughness = serializedObject.FindProperty("mpdRoughness");
+
+        smoothIterations = serializedObject.FindProperty("smoothIterations");
     }
 
     public override void OnInspectorGUI()
@@ -132,6 +150,33 @@ public class CustomTerrainEditor : Editor
             if (GUILayout.Button("Generate"))
             {
                 terrain.Voronoi();
+            }
+        }
+
+        showMPD = EditorGUILayout.Foldout(showMPD, "Midpoint Displacement");
+        if (showMPD)
+        {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Midpoint Displacement", EditorStyles.boldLabel);
+            EditorGUILayout.IntSlider(mpdHeightMin, -20, 0, new GUIContent("Height Min"));
+            EditorGUILayout.IntSlider(mpdHeightMax, 2, 20, new GUIContent("Height Max"));
+            EditorGUILayout.IntSlider(mpdHeightDampenerPower, 1, 10, new GUIContent("Height Dampener Power"));
+            EditorGUILayout.IntSlider(mpdRoughness, 1, 10, new GUIContent("Roughness"));
+            if (GUILayout.Button("Generate"))
+            {
+                terrain.MidPointDisplacement();
+            }
+        }
+
+        showSmooth = EditorGUILayout.Foldout(showSmooth, "Smooth");
+        if (showSmooth)
+        {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Smooth", EditorStyles.boldLabel);
+            EditorGUILayout.IntSlider(smoothIterations, 1, 10, new GUIContent("Smooth Iteration"));
+            if (GUILayout.Button("Smooth"))
+            {
+                terrain.Smooth();
             }
         }
 
