@@ -40,6 +40,10 @@ public class CustomTerrainEditor : Editor
     // Smooth ----------------------
     SerializedProperty smoothIterations;
 
+    // Texturing ------------------
+    GUITableState splatMapTable;
+    SerializedProperty splatHeights;
+
     // Fold outs ----------
     bool showRandom = false;
     bool showPerlin = false;
@@ -47,6 +51,7 @@ public class CustomTerrainEditor : Editor
     bool showVoronoi = false;
     bool showMPD = false;
     bool showSmooth = false;
+    bool showTexturing = false;
 
     private void OnEnable()
     {
@@ -75,6 +80,9 @@ public class CustomTerrainEditor : Editor
         mpdRoughness = serializedObject.FindProperty("mpdRoughness");
 
         smoothIterations = serializedObject.FindProperty("smoothIterations");
+
+        splatMapTable = new GUITableState("splatMapTable");
+        splatHeights = serializedObject.FindProperty("splatHeights");
     }
 
     public override void OnInspectorGUI()
@@ -177,6 +185,30 @@ public class CustomTerrainEditor : Editor
             if (GUILayout.Button("Smooth"))
             {
                 terrain.Smooth();
+            }
+        }
+
+        showTexturing = EditorGUILayout.Foldout(showTexturing, "Texturing");
+        if (showTexturing)
+        {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Texturing", EditorStyles.boldLabel);
+            splatMapTable = GUITableLayout.DrawTable(splatMapTable, serializedObject.FindProperty("splatHeights"));
+            GUILayout.Space(20);
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("+"))
+            {
+                terrain.AddNewSplatHeight();
+            }
+            if (GUILayout.Button("-"))
+            {
+                terrain.RemoveSplatHeight();
+            }
+            EditorGUILayout.EndHorizontal();
+            
+            if (GUILayout.Button("Apply Textures"))
+            {
+                terrain.SplatMaps();
             }
         }
 
