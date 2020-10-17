@@ -218,7 +218,7 @@ GameObject:
   - component: {fileID: 1622005358}
   - component: {fileID: 1622005357}
   - component: {fileID: 1622005360}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ProceduralTestTerrain
   m_TagString: Terrain
   m_Icon: {fileID: 0}
@@ -326,30 +326,33 @@ MonoBehaviour:
   mpdHeightDampenerPower: 2
   mpdRoughness: 2
   smoothIterations: 10
-  splatHeights:
-  - texture: {fileID: 2800000, guid: 6dff70b1f69dbc640b854ad550b78c39, type: 3}
+  vegetation:
+  - mesh: {fileID: 100000, guid: c91c1eb85782d5748ace27eb4d7415bb, type: 3}
     minHeight: 0
     maxHeight: 1
+    scattering: 5
     minSlope: 0
-    maxSlope: 60
-    splatOffset: 0.1
-    splatNoiseXScale: 0.1
-    splatNoiseYScale: 0.1
-    splatNoiseScalar: 0.05
-    tileOffset: {x: 0, y: 0}
-    tileSize: {x: 50, y: 50}
+    maxSlope: 45
+    minScale: 0.5
+    maxScale: 1
+    colour1: {r: 1, g: 1, b: 1, a: 1}
+    colour2: {r: 1, g: 1, b: 1, a: 1}
+    lightColour: {r: 1, g: 1, b: 1, a: 1}
     remove: 0
-  - texture: {fileID: 2800000, guid: b0701a45fb6c40346a84f5fd65653318, type: 3}
-    minHeight: 0
-    maxHeight: 1
-    minSlope: 60
-    maxSlope: 90
-    splatOffset: 0.1
-    splatNoiseXScale: 0.1
-    splatNoiseYScale: 0.1
-    splatNoiseScalar: 0.05
-    tileOffset: {x: 0, y: 0}
-    tileSize: {x: 50, y: 50}
+  maximumTrees: 10000
+  treeSpacing: 6
+  terrainLayer: 8
+  splatHeights:
+  - txtr: {fileID: 2800000, guid: 9875bf7345d4ac04ab35f3b9ed63a954, type: 3}
+    minH: 0
+    maxH: 1
+    minS: 0
+    maxS: 90
+    offset: 0
+    xNoise: 0.1
+    yNoise: 0.1
+    noiseSc: 0.05
+    tlSz: {x: 50, y: 50}
     remove: 0
 --- !u!1 &2074494351
 GameObject:
@@ -438,7 +441,7 @@ Transform:
   m_GameObject: {fileID: 2074494351}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
   m_LocalPosition: {x: 0, y: 3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 0.99999994}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1

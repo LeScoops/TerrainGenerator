@@ -44,6 +44,12 @@ public class CustomTerrainEditor : Editor
     GUITableState splatMapTable;
     SerializedProperty splatHeights;
 
+    // Vegetation -----------------
+    GUITableState vegMapTable;
+    SerializedProperty vegetation;
+    SerializedProperty maximumTrees;
+    SerializedProperty treeSpacing;
+
     // Fold outs ----------
     bool showRandom = false;
     bool showPerlin = false;
@@ -52,6 +58,7 @@ public class CustomTerrainEditor : Editor
     bool showMPD = false;
     bool showSmooth = false;
     bool showTexturing = false;
+    bool showVegetation = false;
 
     private void OnEnable()
     {
@@ -83,6 +90,11 @@ public class CustomTerrainEditor : Editor
 
         splatMapTable = new GUITableState("splatMapTable");
         splatHeights = serializedObject.FindProperty("splatHeights");
+
+        vegMapTable = new GUITableState("vegMapTable"); ;
+        vegetation = serializedObject.FindProperty("vegetation");
+        maximumTrees = serializedObject.FindProperty("maximumTrees");
+        treeSpacing = serializedObject.FindProperty("treeSpacing");
     }
 
     public override void OnInspectorGUI()
@@ -209,6 +221,31 @@ public class CustomTerrainEditor : Editor
             if (GUILayout.Button("Apply Textures"))
             {
                 terrain.SplatMaps();
+            }
+        }
+
+        showVegetation = EditorGUILayout.Foldout(showVegetation, "Vegetation");
+        if (showVegetation)
+        {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Vegetation", EditorStyles.boldLabel);
+            EditorGUILayout.IntSlider(maximumTrees, 0, 10000, new GUIContent("Maximum Trees"));
+            EditorGUILayout.IntSlider(treeSpacing, 2, 20, new GUIContent("Tree Spacing"));
+            vegMapTable = GUITableLayout.DrawTable(splatMapTable, serializedObject.FindProperty("vegetation"));
+            GUILayout.Space(20);
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("+"))
+            {
+                terrain.AddNewVegetation();
+            }
+            if (GUILayout.Button("-"))
+            {
+                terrain.RemoveVegetation();
+            }
+            EditorGUILayout.EndHorizontal();
+            if (GUILayout.Button("Apply Vegetation"))
+            {
+                terrain.PlantVegetation();
             }
         }
 
