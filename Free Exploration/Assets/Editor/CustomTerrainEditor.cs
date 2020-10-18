@@ -56,6 +56,12 @@ public class CustomTerrainEditor : Editor
     SerializedProperty maxDetails;
     SerializedProperty detailSpacing;
 
+    // Water ----------------------
+    SerializedProperty waterHeight;
+    SerializedProperty waterGameObject;
+    SerializedProperty shoreLineMaterial;
+    SerializedProperty shoreSize;
+
     // Fold outs ----------
     bool showRandom = false;
     bool showPerlin = false;
@@ -66,6 +72,7 @@ public class CustomTerrainEditor : Editor
     bool showTexturing = false;
     bool showVegetation = false;
     bool showDetails = false;
+    bool showWater = false;
 
     private void OnEnable()
     {
@@ -107,6 +114,11 @@ public class CustomTerrainEditor : Editor
         vegetation = serializedObject.FindProperty("vegetation");
         maxDetails = serializedObject.FindProperty("maxDetails");
         detailSpacing = serializedObject.FindProperty("detailSpacing");
+
+        waterHeight = serializedObject.FindProperty("waterHeight");
+        waterGameObject = serializedObject.FindProperty("waterGameObject");
+        shoreLineMaterial = serializedObject.FindProperty("shoreLineMaterial");
+        shoreSize = serializedObject.FindProperty("shoreSize");
     }
 
     public override void OnInspectorGUI()
@@ -284,6 +296,25 @@ public class CustomTerrainEditor : Editor
             if (GUILayout.Button("Apply Details"))
             {
                 terrain.AddDetails();
+            }
+        }
+
+        showWater = EditorGUILayout.Foldout(showWater, "Water");
+        if (showWater)
+        {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Water", EditorStyles.boldLabel);
+            EditorGUILayout.Slider(waterHeight, 0, 1, new GUIContent("Water Height"));
+            EditorGUILayout.PropertyField(waterGameObject);
+            if (GUILayout.Button("Apply Water"))
+            {
+                terrain.AddWater();
+            }
+            EditorGUILayout.Slider(shoreSize, 1, 20, new GUIContent("Shore Size"));
+            EditorGUILayout.PropertyField(shoreLineMaterial);
+            if (GUILayout.Button("Draw Shoreline"))
+            {
+                terrain.DrawShoreLine();
             }
         }
 
