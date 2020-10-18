@@ -50,6 +50,12 @@ public class CustomTerrainEditor : Editor
     SerializedProperty maximumTrees;
     SerializedProperty treeSpacing;
 
+    // Details --------------------
+    GUITableState detailMapTable;
+    SerializedProperty details;
+    SerializedProperty maxDetails;
+    SerializedProperty detailSpacing;
+
     // Fold outs ----------
     bool showRandom = false;
     bool showPerlin = false;
@@ -59,6 +65,7 @@ public class CustomTerrainEditor : Editor
     bool showSmooth = false;
     bool showTexturing = false;
     bool showVegetation = false;
+    bool showDetails = false;
 
     private void OnEnable()
     {
@@ -91,10 +98,15 @@ public class CustomTerrainEditor : Editor
         splatMapTable = new GUITableState("splatMapTable");
         splatHeights = serializedObject.FindProperty("splatHeights");
 
-        vegMapTable = new GUITableState("vegMapTable"); ;
-        vegetation = serializedObject.FindProperty("vegetation");
+        vegMapTable = new GUITableState("vegMapTable");
+        details = serializedObject.FindProperty("details");
         maximumTrees = serializedObject.FindProperty("maximumTrees");
         treeSpacing = serializedObject.FindProperty("treeSpacing");
+
+        detailMapTable = new GUITableState("detailMapTable");
+        vegetation = serializedObject.FindProperty("vegetation");
+        maxDetails = serializedObject.FindProperty("maxDetails");
+        detailSpacing = serializedObject.FindProperty("detailSpacing");
     }
 
     public override void OnInspectorGUI()
@@ -231,7 +243,7 @@ public class CustomTerrainEditor : Editor
             GUILayout.Label("Vegetation", EditorStyles.boldLabel);
             EditorGUILayout.IntSlider(maximumTrees, 0, 10000, new GUIContent("Maximum Trees"));
             EditorGUILayout.IntSlider(treeSpacing, 2, 20, new GUIContent("Tree Spacing"));
-            vegMapTable = GUITableLayout.DrawTable(splatMapTable, serializedObject.FindProperty("vegetation"));
+            vegMapTable = GUITableLayout.DrawTable(vegMapTable, serializedObject.FindProperty("vegetation"));
             GUILayout.Space(20);
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("+"))
@@ -246,6 +258,32 @@ public class CustomTerrainEditor : Editor
             if (GUILayout.Button("Apply Vegetation"))
             {
                 terrain.PlantVegetation();
+            }
+        }
+
+        showDetails = EditorGUILayout.Foldout(showDetails, "Details");
+        if (showDetails)
+        {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Details", EditorStyles.boldLabel);
+            EditorGUILayout.IntSlider(maxDetails, 0, 5000, new GUIContent("Maximum Details"));
+            EditorGUILayout.IntSlider(detailSpacing, 1, 20, new GUIContent("Detail Spacing"));
+            detailMapTable = GUITableLayout.DrawTable(detailMapTable, serializedObject.FindProperty("details"));
+            terrain.GetComponent<Terrain>().detailObjectDistance = maxDetails.intValue;
+            GUILayout.Space(20);
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("+"))
+            {
+                terrain.AddNewDetail();
+            }
+            if (GUILayout.Button("-"))
+            {
+                terrain.RemoveDetail();
+            }
+            EditorGUILayout.EndHorizontal();
+            if (GUILayout.Button("Apply Details"))
+            {
+                terrain.AddDetails();
             }
         }
 
