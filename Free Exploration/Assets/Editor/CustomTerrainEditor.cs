@@ -71,6 +71,20 @@ public class CustomTerrainEditor : Editor
     SerializedProperty droplets;
     SerializedProperty erosionSmoothAmount;
 
+    // Clouds ---------------------
+    SerializedProperty numberOfClouds;
+    SerializedProperty particlesPerCloud;
+    SerializedProperty cloudParticleSize;
+    SerializedProperty cloudScaleMin;
+    SerializedProperty cloudScaleMax;
+    SerializedProperty cloudMaterial;
+    SerializedProperty cloudShadowMaterial;
+    SerializedProperty cloudColour;
+    SerializedProperty cloudLining;
+    SerializedProperty cloudMinSpeed;
+    SerializedProperty cloudMaxSpeed;
+    SerializedProperty cloudDistanceTravelled;
+
     // Fold outs ----------
     bool showRandom = false;
     bool showPerlin = false;
@@ -83,6 +97,7 @@ public class CustomTerrainEditor : Editor
     bool showDetails = false;
     bool showWater = false;
     bool showErosion = false;
+    bool showClouds = false;
 
     private void OnEnable()
     {
@@ -137,6 +152,19 @@ public class CustomTerrainEditor : Editor
         solubility = serializedObject.FindProperty("solubility");
         droplets = serializedObject.FindProperty("droplets");
         erosionSmoothAmount = serializedObject.FindProperty("erosionSmoothAmount");
+
+        numberOfClouds = serializedObject.FindProperty("numberOfClouds");
+        particlesPerCloud = serializedObject.FindProperty("particlesPerCloud");
+        cloudParticleSize = serializedObject.FindProperty("cloudParticleSize");
+        cloudScaleMin = serializedObject.FindProperty("cloudScaleMin");
+        cloudScaleMax = serializedObject.FindProperty("cloudScaleMax");
+        cloudMaterial = serializedObject.FindProperty("cloudMaterial");
+        cloudShadowMaterial = serializedObject.FindProperty("cloudShadowMaterial");
+        cloudColour = serializedObject.FindProperty("cloudColour");
+        cloudLining = serializedObject.FindProperty("cloudLining");
+        cloudMinSpeed = serializedObject.FindProperty("cloudMinSpeed");
+        cloudMaxSpeed = serializedObject.FindProperty("cloudMaxSpeed");
+        cloudDistanceTravelled = serializedObject.FindProperty("cloudDistanceTravelled");
     }
 
     public override void OnInspectorGUI()
@@ -354,7 +382,30 @@ public class CustomTerrainEditor : Editor
             }
         }
 
-        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        showClouds = EditorGUILayout.Foldout(showClouds, "Clouds");
+        if (showClouds)
+        {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Clouds", EditorStyles.boldLabel);
+            EditorGUILayout.IntSlider(numberOfClouds, 1, 20, new GUIContent("Num Clouds"));
+            EditorGUILayout.IntSlider(particlesPerCloud, 1, 100, new GUIContent("Particles Per"));
+            EditorGUILayout.Slider(cloudParticleSize, 1, 20, new GUIContent("Particle Size"));
+            EditorGUILayout.PropertyField(cloudScaleMin, new GUIContent("Cloud Scale Min"));
+            EditorGUILayout.PropertyField(cloudScaleMin, new GUIContent("Cloud Scale Max"));
+            EditorGUILayout.PropertyField(cloudMaterial, new GUIContent("Cloud Material"));
+            EditorGUILayout.PropertyField(cloudShadowMaterial, new GUIContent("Shadow Material"));
+            EditorGUILayout.PropertyField(cloudColour, new GUIContent("Colour"));
+            EditorGUILayout.PropertyField(cloudLining, new GUIContent("Lining"));
+            EditorGUILayout.Slider(cloudMinSpeed, 0.1f, 1.0f, new GUIContent("Min Speed"));
+            EditorGUILayout.Slider(cloudMaxSpeed, 0.1f, 1.0f, new GUIContent("Max Speed"));
+            EditorGUILayout.IntSlider(cloudDistanceTravelled, 100, 1000, new GUIContent("Distance Travelled"));
+
+            if (GUILayout.Button("Generate"))
+            {
+                terrain.GenerateClouds();
+            }
+        }
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         if (GUILayout.Button("Reset Terrain"))
         {
             terrain.ResetTerrain();

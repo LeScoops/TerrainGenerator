@@ -129,6 +129,21 @@ public class CustomTerrain : MonoBehaviour
     public int droplets = 10;
     public int erosionSmoothAmount = 5;
 
+    // Clouds ---------------------------------------
+    public int numberOfClouds = 1;
+    public int particlesPerCloud = 50;
+    public float cloudParticleSize = 5.0f;
+    public Vector3 cloudScaleMin = new Vector3(1.0f, 1.0f, 1.0f);
+    public Vector3 cloudScaleMax = new Vector3(1.0f, 1.0f, 1.0f);
+    public Material cloudMaterial = null;
+    public Material cloudShadowMaterial = null;
+    public Color cloudColour = Color.white;
+    public Color cloudLining = Color.gray;
+    public float cloudMinSpeed = 0.2f;
+    public float cloudMaxSpeed = 0.5f;
+    public int cloudDistanceTravelled = 500;
+
+
     public enum TagType { Tag, Layer}
     [SerializeField]
     int terrainLayer = -1;
@@ -149,6 +164,7 @@ public class CustomTerrain : MonoBehaviour
         tagManager.ApplyModifiedProperties();
 
         SerializedProperty layerProp = tagManager.FindProperty("layers");
+        AddTag(layerProp, "Sky", TagType.Layer);
         terrainLayer = AddTag(layerProp, "Terrain", TagType.Layer);
         tagManager.ApplyModifiedProperties();
 
@@ -751,7 +767,8 @@ public class CustomTerrain : MonoBehaviour
                                                         waterHeight * terrainData.size.y,
                                                         n.x / (float)terrainData.heightmapResolution * terrainData.size.x));
                         go.transform.Rotate(90, 0, 0);
-                        go.tag = "Shore";                    
+                        go.tag = "Shore";
+                        go.layer = LayerMask.NameToLayer("Water");
                     }
                 }
             }
@@ -990,6 +1007,87 @@ public class CustomTerrain : MonoBehaviour
         CanyonCrawler(x - 1, y + 1, height + UnityEngine.Random.Range(slope, slope + 0.01f), slope, maxDepth);
         CanyonCrawler(x, y - 1, height + UnityEngine.Random.Range(slope, slope + 0.01f), slope, maxDepth);
         CanyonCrawler(x, y + 1, height + UnityEngine.Random.Range(slope, slope + 0.01f), slope, maxDepth);
+    }
+
+    // Clouds ---------------------------------------
+    public void GenerateClouds()
+    {
+        GameObject cloudManager = GameObject.Find("CloudManager");
+        if (!cloudManager)
+        {
+            cloudManager = new GameObject();
+            cloudManager.name = "CloudManager";
+            cloudManager.AddComponent<CloudManager>();
+            cloudManager.transform.position = this.transform.position;
+        }
+
+        GameObject[] allClouds = GameObject.FindGameObjectsWithTag("Cloud");
+        for (int i = 0; i < allClouds.Length; i++)
+        {
+            DestroyImmediate(allClouds[i]);
+        }
+        for (int c = 0; c < numberOfClouds; c++)
+        {
+            GameObject cloudGO = new GameObject();
+            cloudGO.name = "Cloud" + c;
+            cloudGO.tag = "Cloud";
+            cloudGO.transform.rotation = cloudManager.transform.rotation;
+            cloudGO.transform.position = cloudManager.transform.position;
+
+            CloudController cc = cloudGO.AddComponent<CloudController>();
+            cc.lining = cloudLining;
+            cc.colour = cloudColour;
+            cc.numberOfParticles = particlesPerCloud;
+            cc.minSpeed = cloudMinSpeed;
+            cc.maxSpeed = cloudMaxSpeed;
+            cc.distance = cloudDistanceTravelled;
+
+            ParticleSystem cloudSystem = cloudGO.AddComponent<ParticleSystem>();
+            Renderer cloudRend = cloudGO.GetComponent<Renderer>();
+            cloudRend.material = cloudMaterial;
+
+            cloudGO.layer = LayerMask.NameToLayer("Sky");
+            GameObject cloudProjector = new GameObject();
+            cloudProjector.name = "Shadow";
+            cloudProjector.transform.position = cloudGO.transform.position;
+            cloudProjector.transform.forward = Vector3.down;
+            cloudProjector.transform.parent = cloudGO.transform;
+
+            if (UnityEngine.Random.Range(0, 10) < 5)
+            {
+                Projector cp = cloudProjector.AddComponent<Projector>();
+                cp.material = cloudShadowMaterial;
+                cp.farClipPlane = terrainData.size.y;
+                int skyLayerMask = 1 << LayerMask.NameToLayer("Sky");
+                int waterLayerMask = 1 << LayerMask.NameToLayer("Water");
+                cp.ignoreLayers = skyLayerMask | waterLayerMask;
+                cp.fieldOfView = 20.0f;
+            }
+
+            cloudRend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            cloudRend.receiveShadows = false;
+
+            ParticleSystem.MainModule main = cloudSystem.main;
+            main.loop = false;
+            main.startLifetime = 10000000;
+            main.startSpeed = 0;
+            main.startSize = cloudParticleSize;
+            main.startColor = Color.white;
+
+            var emission = cloudSystem.emission;
+            emission.rateOverTime = 0;
+            emission.SetBursts(new ParticleSystem.Burst[] { new ParticleSystem.Burst(0.0f, (short)particlesPerCloud) });
+
+            var shape = cloudSystem.shape;
+            shape.shapeType = ParticleSystemShapeType.Sphere;
+            Vector3 newScale = new Vector3(UnityEngine.Random.Range(cloudScaleMin.x, cloudScaleMax.x),
+                UnityEngine.Random.Range(cloudScaleMin.y, cloudScaleMax.y),
+                UnityEngine.Random.Range(cloudScaleMin.z, cloudScaleMax.z));
+            shape.scale = newScale;
+
+            cloudGO.transform.parent = cloudManager.transform;
+            cloudGO.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        }
     }
 
     public void ResetTerrain()

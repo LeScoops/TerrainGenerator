@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityStandardAssets.Utility;
 
 namespace UnityStandardAssets.Effects
 {
@@ -12,13 +14,13 @@ namespace UnityStandardAssets.Effects
         public float resetTimeDelay = 10;
 
         private bool m_Exploded;
-        //private ObjectResetter m_ObjectResetter;
+        private ObjectResetter m_ObjectResetter;
 
 
         // implementing one method from monobehviour to ensure that the enable/disable tickbox appears in the inspector
         private void Start()
         {
-            //m_ObjectResetter = GetComponent<ObjectResetter>();
+            m_ObjectResetter = GetComponent<ObjectResetter>();
         }
 
 
@@ -44,7 +46,7 @@ namespace UnityStandardAssets.Effects
 
                             if (reset)
                             {
-                                //m_ObjectResetter.DelayedReset(resetTimeDelay);
+                                m_ObjectResetter.DelayedReset(resetTimeDelay);
                             }
                         }
                     }
