@@ -14,16 +14,14 @@ public class CustomTerrain : MonoBehaviour
 
     public bool resetTerrain = true;
 
-    // Perlin Noise ----------------
+    //Perlin Noise ----------------
     public float perlinXScale = 0.01f;
     public float perlinYScale = 0.01f;
-    //public int perlinOffsetX = 0;
-    //public int perlinOffsetY = 0;
     public int perlinOctaves = 3;
     public float perlinPersistance = 8;
     public float perlinHeightScale = 0.09f;
 
-    // Multiple Perlin Noise --------
+    //Multiple Perlin Noise --------
     [Serializable]
     public class PerlinParameters
     {
@@ -41,7 +39,7 @@ public class CustomTerrain : MonoBehaviour
         new PerlinParameters()
     };
 
-    // Voronoi -----------------------
+    //Voronoi -----------------------
     public int vPeakCount = 3;
     public float vFallOff = 0.2f;
     public float vDropOff = 0.6f;
@@ -50,16 +48,16 @@ public class CustomTerrain : MonoBehaviour
     public enum VoronoiType { Linear, Power, Combined, SinPow };
     public VoronoiType voronoiType = VoronoiType.Linear;
 
-    // Midpoint Displacement ------------------------
+    //Midpoint Displacement ------------------------
     public int mpdHeightMin = -5;
     public int mpdHeightMax = 5;
     public int mpdHeightDampenerPower = 2;
     public int mpdRoughness = 2;
 
-    // Smooth ---------------------------------------
+    //Smooth ---------------------------------------
     public int smoothIterations = 1;
 
-    // Vegetation ----------------------------------
+    //Vegetation ----------------------------------
     [System.Serializable]
     public class Vegetation
     {
@@ -83,7 +81,7 @@ public class CustomTerrain : MonoBehaviour
     public int maximumTrees = 1000;
     public int treeSpacing = 5;
 
-    // Details --------------------------------------
+    //Details --------------------------------------
     [System.Serializable]
     public class Detail
     {
@@ -110,13 +108,13 @@ public class CustomTerrain : MonoBehaviour
     public int maxDetails = 5000;
     public int detailSpacing = 5;
 
-    // Water ----------------------------------------
+    //Water ----------------------------------------
     public float waterHeight = 0.5f;
     public GameObject waterGameObject;
     public Material shoreLineMaterial;
     public float shoreSize = 10.0f;
 
-    // Erosion --------------------------------------
+    //Erosion --------------------------------------
     public enum ErosionType
     {
         Rain, Thermal, Tidal, River, Wind, Canyon
@@ -129,7 +127,7 @@ public class CustomTerrain : MonoBehaviour
     public int droplets = 10;
     public int erosionSmoothAmount = 5;
 
-    // Clouds ---------------------------------------
+    //Clouds ---------------------------------------
     public int numberOfClouds = 1;
     public int particlesPerCloud = 50;
     public float cloudParticleSize = 5.0f;
@@ -144,11 +142,11 @@ public class CustomTerrain : MonoBehaviour
     public int cloudDistanceTravelled = 500;
 
 
-    public enum TagType { Tag, Layer}
+    public enum TagType { Tag, Layer }
     [SerializeField]
     int terrainLayer = -1;
 
-    // METHODS ----------------------------------------------------------------------
+    //METHODS ----------------------------------------------------------------------
     // ------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------
@@ -206,7 +204,7 @@ public class CustomTerrain : MonoBehaviour
         terrainData = terrain.terrainData;
     }
 
-    // Single Perlin --------------------------------
+    //Single Perlin --------------------------------
     public void Perlin()
     {
         float[,] heightMap = GetHeightMap();
@@ -215,14 +213,14 @@ public class CustomTerrain : MonoBehaviour
         {
             for (int x = 0; x < terrainData.heightmapResolution; x++)
             {
-                heightMap[x, y] += TerrainUtils.fBM((x + offset) * perlinXScale, (y + offset) * perlinYScale, perlinOctaves, 
+                heightMap[x, y] += TerrainUtils.fBM((x + offset) * perlinXScale, (y + offset) * perlinYScale, perlinOctaves,
                     perlinPersistance) * perlinHeightScale;
             }
         }
         terrainData.SetHeights(0, 0, heightMap);
     }
 
-    // Multiple Perlin -------------------------------
+    //Multiple Perlin -------------------------------
     public void MultiplePerlinTerrain()
     {
         float[,] heightMap = GetHeightMap();
@@ -232,7 +230,7 @@ public class CustomTerrain : MonoBehaviour
             {
                 foreach (PerlinParameters p in perlinParameters)
                 {
-                    heightMap[x, y] += TerrainUtils.fBM((x + p.mPerlinOffsetX) * p.mPerlinXScale, 
+                    heightMap[x, y] += TerrainUtils.fBM((x + p.mPerlinOffsetX) * p.mPerlinXScale,
                         (y + p.mPerlinOffsetY) * p.mPerlinYScale, p.mPerlinOctaves,
                         p.mPerlinPersistance) * p.mPerlinHeightScale;
                 }
@@ -261,7 +259,7 @@ public class CustomTerrain : MonoBehaviour
         perlinParameters = keptPerlinParameters;
     }
 
-    // Random Terrain ---------------------------------
+    //Random Terrain ---------------------------------
     public void RandomTerrain()
     {
         float[,] heightMap = GetHeightMap();
@@ -275,7 +273,7 @@ public class CustomTerrain : MonoBehaviour
         terrainData.SetHeights(0, 0, heightMap);
     }
 
-    // Voronoi ----------------------------------------
+    //Voronoi ----------------------------------------
     public void Voronoi()
     {
         float[,] heightMap = GetHeightMap();
@@ -334,7 +332,7 @@ public class CustomTerrain : MonoBehaviour
         terrainData.SetHeights(0, 0, heightMap);
     }
 
-    // Midpoint Displacement --------------------------
+    //Midpoint Displacement --------------------------
     public void MidPointDisplacement()
     {
         float[,] heightMap = GetHeightMap();
@@ -413,7 +411,7 @@ public class CustomTerrain : MonoBehaviour
         terrainData.SetHeights(0, 0, heightMap);
     }
 
-    // Smooth -----------------------------------------
+    //Smooth -----------------------------------------
     List<Vector2> GenerateNeighbours(Vector2 pos, int width, int height)
     {
         List<Vector2> neighbours = new List<Vector2>();
@@ -451,17 +449,17 @@ public class CustomTerrain : MonoBehaviour
                     {
                         avgHeight += heightMap[(int)n.x, (int)n.y];
                     }
-                    heightMap[x, y] = avgHeight / ((float)neighbours.Count + 1);                
+                    heightMap[x, y] = avgHeight / ((float)neighbours.Count + 1);
                 }
             }
             smoothProgress++;
-            EditorUtility.DisplayProgressBar("Smoothing Terrain", "Progress", smoothProgress/smoothIterations);
+            EditorUtility.DisplayProgressBar("Smoothing Terrain", "Progress", smoothProgress / smoothIterations);
         }
         terrainData.SetHeights(0, 0, heightMap);
         EditorUtility.ClearProgressBar();
     }
 
-    // Texturing --------------------------------------
+    //Texturing --------------------------------------
     [Serializable]
     public class SplatHeights
     {
@@ -474,7 +472,7 @@ public class CustomTerrain : MonoBehaviour
         public float xNoise = 0.1f;
         public float yNoise = 0.1f;
         public float noiseSc = 0.05f;
-        //public Vector2 tileOffset = new Vector2(0, 0);
+        public Vector2 tileOffset = new Vector2(0, 0);
         public Vector2 tlSz = new Vector2(50, 50);
         public bool remove = false;
     }
@@ -511,7 +509,7 @@ public class CustomTerrain : MonoBehaviour
         {
             newSplatPrototype[spindex] = new TerrainLayer();
             newSplatPrototype[spindex].diffuseTexture = sh.txtr;
-            //newSplatPrototype[spindex].tileOffset = sh.tileOffset;
+            newSplatPrototype[spindex].tileOffset = sh.tileOffset;
             newSplatPrototype[spindex].tileSize = sh.tlSz;
             newSplatPrototype[spindex].diffuseTexture.Apply(true);
             string path = "Assets/TerrainAssets/Layers/Layer_" + spindex + ".terrainlayer";
@@ -554,9 +552,9 @@ public class CustomTerrain : MonoBehaviour
         terrainData.SetAlphamaps(0, 0, splatMapData);
     }
 
-    // Vegetation -------------------------------------
+    //Vegetation -------------------------------------
     public void PlantVegetation()
-    {        
+    {
         TreePrototype[] newTreePrototypes;
         newTreePrototypes = new TreePrototype[vegetation.Count];
         int tindex = 0;
@@ -646,7 +644,7 @@ public class CustomTerrain : MonoBehaviour
         vegetation = keptVegetation;
     }
 
-    // Details ----------------------------------------
+    //Details -------------------/*-*/--------------------
     public void AddDetails()
     {
         DetailPrototype[] newDetailPrototypes;
@@ -696,7 +694,7 @@ public class CustomTerrain : MonoBehaviour
                     float nextHeightStart = details[i].maxHeight * thisNoise + details[i].overlap * thisNoise;
                     float thisHeight = heightMap[yHM, xHM];
                     float steepness = terrainData.GetSteepness(xHM / (float)terrainData.size.x, yHM / (float)terrainData.size.z);
-                    if ((thisHeight >= thisHeightStart && thisHeight <= nextHeightStart) && 
+                    if ((thisHeight >= thisHeightStart && thisHeight <= nextHeightStart) &&
                         (steepness >= details[i].minSlope && steepness <= details[i].maxSlope))
                     {
                         detailMap[y, x] = 1;
@@ -727,7 +725,7 @@ public class CustomTerrain : MonoBehaviour
         details = keptDetails;
     }
 
-    // Water -----------------------------------------
+    //Water -----------------------------------------
     public void AddWater()
     {
         GameObject water = GameObject.Find("water");
@@ -813,7 +811,7 @@ public class CustomTerrain : MonoBehaviour
         }
     }
 
-    // Erosion ---------------------------------------
+    //Erosion ---------------------------------------
     public void Erosion()
     {
         switch (erosionType)
@@ -840,7 +838,7 @@ public class CustomTerrain : MonoBehaviour
                 break;
         }
         smoothIterations = erosionSmoothAmount;
-        Smooth();        
+        Smooth();
     }
     void Rain()
     {
@@ -878,7 +876,7 @@ public class CustomTerrain : MonoBehaviour
         }
         terrainData.SetHeights(0, 0, heightMap);
     }
-    float[,] RunRiver(Vector2 dropletPosition, float[,] heightMap, float[,] erosionMap, int heightMapResolution )
+    float[,] RunRiver(Vector2 dropletPosition, float[,] heightMap, float[,] erosionMap, int heightMapResolution)
     {
         while (erosionMap[(int)dropletPosition.x, (int)dropletPosition.y] > 0)
         {
@@ -938,7 +936,7 @@ public class CustomTerrain : MonoBehaviour
                     if (heightMap[x, y] < waterHeight && heightMap[(int)n.x, (int)n.y] > waterHeight)
                     {
                         heightMap[x, y] = waterHeight;
-                        heightMap[(int)n.x, (int)n.y] -= waterHeight * erosionAmount ;
+                        heightMap[(int)n.x, (int)n.y] -= waterHeight * erosionAmount;
                     }
                 }
             }
@@ -1009,7 +1007,7 @@ public class CustomTerrain : MonoBehaviour
         CanyonCrawler(x, y + 1, height + UnityEngine.Random.Range(slope, slope + 0.01f), slope, maxDepth);
     }
 
-    // Clouds ---------------------------------------
+    //Clouds ---------------------------------------
     public void GenerateClouds()
     {
         GameObject cloudManager = GameObject.Find("CloudManager");
@@ -1101,7 +1099,7 @@ public class CustomTerrain : MonoBehaviour
             }
         }
         terrainData.SetHeights(0, 0, heightMap);
-    }   
+    }
 
     void NormalizeVector(float[] v)
     {

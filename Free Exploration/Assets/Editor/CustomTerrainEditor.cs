@@ -12,8 +12,6 @@ public class CustomTerrainEditor : Editor
     // Single Perlin -----------
     SerializedProperty perlinXScale;
     SerializedProperty perlinYScale;
-    //SerializedProperty perlinOffsetX;
-    //SerializedProperty perlinOffsetY;
     SerializedProperty perlinOctaves;
     SerializedProperty perlinPersistance;
     SerializedProperty perlinHeightScale;
@@ -104,8 +102,6 @@ public class CustomTerrainEditor : Editor
         randomHeightRange = serializedObject.FindProperty("randomHeightRange");
         perlinXScale = serializedObject.FindProperty("perlinXScale");
         perlinYScale = serializedObject.FindProperty("perlinYScale");
-        //perlinOffsetX = serializedObject.FindProperty("perlinOffsetX");
-        //perlinOffsetY = serializedObject.FindProperty("perlinOffsetY");
         perlinOctaves = serializedObject.FindProperty("perlinOctaves");
         perlinPersistance = serializedObject.FindProperty("perlinPersistance");
         perlinHeightScale = serializedObject.FindProperty("perlinHeightScale");
@@ -287,7 +283,7 @@ public class CustomTerrainEditor : Editor
                 terrain.RemoveSplatHeight();
             }
             EditorGUILayout.EndHorizontal();
-            
+
             if (GUILayout.Button("Apply Textures"))
             {
                 terrain.SplatMaps();
@@ -405,12 +401,11 @@ public class CustomTerrainEditor : Editor
                 terrain.GenerateClouds();
             }
         }
-            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         if (GUILayout.Button("Reset Terrain"))
         {
             terrain.ResetTerrain();
         }
-        
 
         serializedObject.ApplyModifiedProperties();
     }
