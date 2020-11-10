@@ -10,34 +10,36 @@ public class GenerateDetails : MonoBehaviour
     public TerrainData terrainData;
 
     [SerializeField]
-    int terrainLayer = -1;
+    int terrainLayer = 8;
 
     //Smooth ---------------------------------------
     public int smoothIterations = 1;
 
     //Vegetation ----------------------------------
-    [System.Serializable]
-    public class Vegetation
-    {
-        public GameObject mesh;
-        public float minHeight = 0.1f;
-        public float maxHeight = 0.2f;
-        public float scattering = 5.0f;
-        public float minSlope = 0;
-        public float maxSlope = 90;
-        public float minScale = 0.5f;
-        public float maxScale = 1.0f;
-        public Color colour1 = Color.white;
-        public Color colour2 = Color.white;
-        public Color lightColour = Color.white;
-        public bool remove = false;
-    }
-    public List<Vegetation> vegetation = new List<Vegetation>()
-    {
-        new Vegetation()
-    };
-    public int maximumTrees = 1000;
-    public int treeSpacing = 5;
+    //[System.Serializable]
+    //public class Vegetation
+    //{
+    //    public GameObject mesh;
+    //    public float minHeight = 0.1f;
+    //    public float maxHeight = 0.2f;
+    //    public float scattering = 5.0f;
+    //    public float minSlope = 0;
+    //    public float maxSlope = 90;
+    //    public float minScale = 0.5f;
+    //    public float maxScale = 1.0f;
+    //    public Color colour1 = Color.white;
+    //    public Color colour2 = Color.white;
+    //    public Color lightColour = Color.white;
+    //    public bool remove = false;
+    //}
+    //public List<Vegetation> vegetation = new List<Vegetation>()
+    //{
+    //    new Vegetation()
+    //};
+    //public int maximumTrees = 1000;
+    //public int treeSpacing = 5;
+
+    [SerializeField] SO_Trees treeValues;
 
     //Details --------------------------------------
     [System.Serializable]
@@ -108,10 +110,13 @@ public class GenerateDetails : MonoBehaviour
     //Vegetation -------------------------------------
     public void PlantVegetation()
     {
+        if (!treeValues) return;
+
+
         TreePrototype[] newTreePrototypes;
-        newTreePrototypes = new TreePrototype[vegetation.Count];
+        newTreePrototypes = new TreePrototype[treeValues.vegetation.Count];
         int tindex = 0;
-        foreach (Vegetation t in vegetation)
+        foreach (SO_Trees.Vegetation t in treeValues.vegetation)
         {
             newTreePrototypes[tindex] = new TreePrototype();
             newTreePrototypes[tindex].prefab = t.mesh;
@@ -120,51 +125,48 @@ public class GenerateDetails : MonoBehaviour
         terrainData.treePrototypes = newTreePrototypes;
 
         List<TreeInstance> allVegetation = new List<TreeInstance>();
-        for (int z = 0; z < terrainData.size.z; z += treeSpacing)
+        for (int z = 0; z < terrainData.size.z; z += treeValues.treeSpacing)
         {
-            for (int x = 0; x < terrainData.size.x; x += treeSpacing)
+            for (int x = 0; x < terrainData.size.x; x += treeValues.treeSpacing)
             {
                 for (int tp = 0; tp < terrainData.treePrototypes.Length; tp++)
                 {
                     float thisHeight = terrainData.GetHeight(x, z) / terrainData.size.y;
-                    float thisHeightStart = vegetation[tp].minHeight;
-                    float thisHeightEnd = vegetation[tp].maxHeight;
+                    float thisHeightStart = treeValues.vegetation[tp].minHeight;
+                    float thisHeightEnd = treeValues.vegetation[tp].maxHeight;
 
-                    float steepness = terrainData.GetSteepness(x / (float)terrainData.size.x, z / (float)terrainData.size.z);
+                    float steepness = terrainData.GetSteepness(x / terrainData.size.x, z / terrainData.size.z);
 
                     if ((thisHeight >= thisHeightStart && thisHeight <= thisHeightEnd) &&
-                        steepness >= vegetation[tp].minSlope && steepness <= vegetation[tp].maxSlope)
+                        steepness >= treeValues.vegetation[tp].minSlope && steepness <= treeValues.vegetation[tp].maxSlope)
                     {
+                        //Debug.Log(steepness);
                         TreeInstance instance = new TreeInstance();
                         instance.position = new Vector3(
-                            (x + UnityEngine.Random.Range(-vegetation[tp].scattering, vegetation[tp].scattering)) / terrainData.size.x,
+                            (x + Random.Range(-treeValues.vegetation[tp].scattering, treeValues.vegetation[tp].scattering)) / terrainData.size.x,
                             terrainData.GetHeight(x, z) / terrainData.size.y,
-                            (z + UnityEngine.Random.Range(-vegetation[tp].scattering, vegetation[tp].scattering)) / terrainData.size.z);
+                            (z + Random.Range(-treeValues.vegetation[tp].scattering, treeValues.vegetation[tp].scattering)) / terrainData.size.z);
 
                         Vector3 treeWorldPos = new Vector3(instance.position.x * terrainData.size.x,
                             instance.position.y * terrainData.size.y,
-                            instance.position.z * terrainData.size.z) + this.transform.position;
+                            instance.position.z * terrainData.size.z) + transform.position;
 
                         RaycastHit hit;
-                        int layerMask = 1 << terrainLayer;
-                        if (Physics.Raycast(treeWorldPos + new Vector3(0, 10, 0), -Vector3.up, out hit, 100, layerMask) ||
-                            Physics.Raycast(treeWorldPos - new Vector3(0, 10, 0), Vector3.up, out hit, 100, layerMask))
+                        int layerMask = terrainLayer;
+                        if (Physics.Raycast(treeWorldPos /*+ new Vector3(0, 10, 0)*/, -Vector3.up, out hit, 100, layerMask) ||
+                            Physics.Raycast(treeWorldPos /*- new Vector3(0, 10, 0)*/, Vector3.up, out hit, 100, layerMask))
                         {
-                            float treeHeight = (hit.point.y - this.transform.position.y) / terrainData.size.y;
+                            float treeHeight = (hit.point.y - transform.position.y) / terrainData.size.y;
                             instance.position = new Vector3(instance.position.x, treeHeight, instance.position.z);
-                            instance.position = new Vector3(instance.position.x * terrainData.size.x / terrainData.alphamapWidth,
-                                                            instance.position.y,
-                                                            instance.position.z * terrainData.size.z / terrainData.alphamapHeight);
-
-                            instance.rotation = UnityEngine.Random.Range(0, 360);
+                            instance.rotation = Random.Range(0, 360);
                             instance.prototypeIndex = tp;
-                            instance.color = Color.Lerp(vegetation[tp].colour1, vegetation[tp].colour2, UnityEngine.Random.Range(0.0f, 1.0f));
-                            instance.lightmapColor = vegetation[tp].lightColour;
-                            float scale = UnityEngine.Random.Range(vegetation[tp].minScale, vegetation[tp].maxScale);
+                            instance.color = Color.Lerp(treeValues.vegetation[tp].colour1, treeValues.vegetation[tp].colour2, Random.Range(0.0f, 1.0f));
+                            instance.lightmapColor = treeValues.vegetation[tp].lightColour;
+                            float scale = Random.Range(treeValues.vegetation[tp].minScale, treeValues.vegetation[tp].maxScale);
                             instance.heightScale = scale;
                             instance.widthScale = scale;
                             allVegetation.Add(instance);
-                            if (allVegetation.Count >= maximumTrees) goto TREESDONE;
+                            if (allVegetation.Count >= treeValues.maximumTrees) goto TREESDONE;
                         }
 
 
@@ -176,28 +178,28 @@ public class GenerateDetails : MonoBehaviour
     TREESDONE:
         terrainData.treeInstances = allVegetation.ToArray();
     }
-    public void AddNewVegetation()
-    {
-        vegetation.Add(new Vegetation());
-    }
-    public void RemoveVegetation()
-    {
-        List<Vegetation> keptVegetation = new List<Vegetation>();
-        for (int i = 0; i < vegetation.Count; i++)
-        {
-            if (!vegetation[i].remove)
-            {
-                keptVegetation.Add(vegetation[i]);
-            }
-        }
-        if (keptVegetation.Count == 0)
-        {
-            keptVegetation.Add(vegetation[0]);
-        }
-        vegetation = keptVegetation;
-    }
+    //public void AddNewVegetation()
+    //{
+    //    vegetation.Add(new Vegetation());
+    //}
+    //public void RemoveVegetation()
+    //{
+    //    List<Vegetation> keptVegetation = new List<Vegetation>();
+    //    for (int i = 0; i < vegetation.Count; i++)
+    //    {
+    //        if (!vegetation[i].remove)
+    //        {
+    //            keptVegetation.Add(vegetation[i]);
+    //        }
+    //    }
+    //    if (keptVegetation.Count == 0)
+    //    {
+    //        keptVegetation.Add(vegetation[0]);
+    //    }
+    //    vegetation = keptVegetation;
+    //}
 
-    //Details -------------------/*-*/--------------------
+    //Details -------------------------------------------
     public void AddDetails()
     {
         DetailPrototype[] newDetailPrototypes;

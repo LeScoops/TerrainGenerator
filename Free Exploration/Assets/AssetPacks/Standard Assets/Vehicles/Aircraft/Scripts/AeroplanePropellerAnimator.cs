@@ -5,9 +5,9 @@ namespace UnityStandardAssets.Vehicles.Aeroplane
 {
     public class AeroplanePropellerAnimator : MonoBehaviour
     {
-        [SerializeField] private Transform m_PropellorModel;                          // The model of the the aeroplane's propellor.
-        [SerializeField] private Transform m_PropellorBlur;                           // The plane used for the blurred propellor textures.
-        [SerializeField] private Texture2D[] m_PropellorBlurTextures;                 // An array of increasingly blurred propellor textures.
+        [SerializeField] private Transform m_PropellorModel = null;                          // The model of the the aeroplane's propellor.
+        [SerializeField] private Transform m_PropellorBlur = null;                           // The plane used for the blurred propellor textures.
+        [SerializeField] private Texture2D[] m_PropellorBlurTextures = new Texture2D[1];                 // An array of increasingly blurred propellor textures.
         [SerializeField] [Range(0f, 1f)] private float m_ThrottleBlurStart = 0.25f;   // The point at which the blurred textures start.
         [SerializeField] [Range(0f, 1f)] private float m_ThrottleBlurEnd = 0.5f;      // The point at which the blurred textures stop changing.
         [SerializeField] private float m_MaxRpm = 2000;                               // The maximum speed the propellor can turn at.

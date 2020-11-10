@@ -310,9 +310,10 @@ GameObject:
   - component: {fileID: 1168034672}
   - component: {fileID: 1168034671}
   - component: {fileID: 1168034670}
-  m_Layer: 0
+  - component: {fileID: 1168034674}
+  m_Layer: 8
   m_Name: Terrain
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -329,7 +330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b62873cb3272df8498520b2131ef3324, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resetTerrain: 0
+  resetTerrain: 1
   terrain: {fileID: 1168034672}
   terrainData: {fileID: 15600000, guid: f98f5ae4dc46ded4a855d88619c8302a, type: 2}
   perlinValues: {fileID: 11400000, guid: 8f1923a5dc5a5af468bf199f1d7ca9ac, type: 2}
@@ -361,7 +362,7 @@ Terrain:
   m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
   m_TreeMaximumFullLODCount: 50
-  m_DetailObjectDistance: 80
+  m_DetailObjectDistance: 5000
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 1000
@@ -394,3 +395,61 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1168034674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1168034669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90212f1801b1d224c836b7d3b6e111aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrain: {fileID: 1168034672}
+  terrainData: {fileID: 15600000, guid: f98f5ae4dc46ded4a855d88619c8302a, type: 2}
+  terrainLayer: -1
+  smoothIterations: 1
+  treeValues: {fileID: 11400000, guid: eec635caab7ae284ca2d36f73544342b, type: 2}
+  details:
+  - prototype: {fileID: 0}
+    prototypeTexture: {fileID: 0}
+    minHeight: 0.1
+    maxHeight: 0.2
+    minSlope: 0
+    maxSlope: 1
+    dryColour: {r: 1, g: 1, b: 1, a: 1}
+    healthyColour: {r: 1, g: 1, b: 1, a: 1}
+    heightRange: {x: 1, y: 1}
+    widthRange: {x: 1, y: 1}
+    noiseSpread: 0.5
+    overlap: 0.01
+    feather: 0.5
+    density: 0.5
+    remove: 0
+  maxDetails: 5000
+  detailSpacing: 5
+  waterHeight: 0.5
+  waterGameObject: {fileID: 0}
+  shoreLineMaterial: {fileID: 0}
+  shoreSize: 10
+  erosionType: 0
+  erosionStrength: 0.1
+  erosionAmount: 0.01
+  springsPerRiver: 5
+  solubility: 0.01
+  droplets: 10
+  erosionSmoothAmount: 5
+  numberOfClouds: 1
+  particlesPerCloud: 50
+  cloudParticleSize: 5
+  cloudScaleMin: {x: 1, y: 1, z: 1}
+  cloudScaleMax: {x: 1, y: 1, z: 1}
+  cloudMaterial: {fileID: 0}
+  cloudShadowMaterial: {fileID: 0}
+  cloudColour: {r: 1, g: 1, b: 1, a: 1}
+  cloudLining: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  cloudMinSpeed: 0.2
+  cloudMaxSpeed: 0.5
+  cloudDistanceTravelled: 500

@@ -12,10 +12,11 @@ public class DetailsEditor : Editor
     SerializedProperty smoothIterations;
 
     // Vegetation -----------------
-    GUITableState vegMapTable;
-    SerializedProperty vegetation;
-    SerializedProperty maximumTrees;
-    SerializedProperty treeSpacing;
+    //GUITableState vegMapTable;
+    //SerializedProperty vegetation;
+    //SerializedProperty maximumTrees;
+    //SerializedProperty treeSpacing;
+    SerializedProperty treeValues;
 
     // Details --------------------
     GUITableState detailMapTable;
@@ -62,13 +63,14 @@ public class DetailsEditor : Editor
     {
         smoothIterations = serializedObject.FindProperty("smoothIterations");
 
-        vegMapTable = new GUITableState("vegMapTable");
-        details = serializedObject.FindProperty("details");
-        maximumTrees = serializedObject.FindProperty("maximumTrees");
-        treeSpacing = serializedObject.FindProperty("treeSpacing");
+        //vegMapTable = new GUITableState("vegMapTable");
+        //maximumTrees = serializedObject.FindProperty("maximumTrees");
+        //treeSpacing = serializedObject.FindProperty("treeSpacing");
+        //vegetation = serializedObject.FindProperty("vegetation");
+        treeValues = serializedObject.FindProperty("treeValues");
 
         detailMapTable = new GUITableState("detailMapTable");
-        vegetation = serializedObject.FindProperty("vegetation");
+        details = serializedObject.FindProperty("details");
         maxDetails = serializedObject.FindProperty("maxDetails");
         detailSpacing = serializedObject.FindProperty("detailSpacing");
 
@@ -109,20 +111,21 @@ public class DetailsEditor : Editor
         {
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             GUILayout.Label("Vegetation", EditorStyles.boldLabel);
-            EditorGUILayout.IntSlider(maximumTrees, 0, 10000, new GUIContent("Maximum Trees"));
-            EditorGUILayout.IntSlider(treeSpacing, 2, 20, new GUIContent("Tree Spacing"));
-            vegMapTable = GUITableLayout.DrawTable(vegMapTable, serializedObject.FindProperty("vegetation"));
-            GUILayout.Space(20);
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("+"))
-            {
-                terrain.AddNewVegetation();
-            }
-            if (GUILayout.Button("-"))
-            {
-                terrain.RemoveVegetation();
-            }
-            EditorGUILayout.EndHorizontal();
+            //EditorGUILayout.IntSlider(maximumTrees, 0, 10000, new GUIContent("Maximum Trees"));
+            //EditorGUILayout.IntSlider(treeSpacing, 2, 20, new GUIContent("Tree Spacing"));
+            //vegMapTable = GUITableLayout.DrawTable(vegMapTable, serializedObject.FindProperty("vegetation"));
+            //GUILayout.Space(20);
+            //EditorGUILayout.BeginHorizontal();
+            //if (GUILayout.Button("+"))
+            //{
+            //    terrain.AddNewVegetation();
+            //}
+            //if (GUILayout.Button("-"))
+            //{
+            //    terrain.RemoveVegetation();
+            //}
+            //EditorGUILayout.EndHorizontal();
+            EditorGUILayout.PropertyField(treeValues);
             if (GUILayout.Button("Apply Vegetation"))
             {
                 terrain.PlantVegetation();
