@@ -20,11 +20,13 @@ public class SO_Trees : ScriptableObject
         public Color colour1 = Color.white;
         public Color colour2 = Color.white;
         public Color lightColour = Color.white;
+        public int numberOfTrees = 100;
     }
     public List<Vegetation> vegetation = new List<Vegetation>()
     {
         new Vegetation()
     };
+    public DetailGenerationTypes generationType = DetailGenerationTypes.Grid;
     public int maximumTrees = 1000;
     public int treeSpacing = 5;
 }

@@ -16,7 +16,7 @@ public class GenerateTerrain : MonoBehaviour
     /*public*/ int perlinOctaves = 3;
     /*public*/ float perlinPersistance = 8;
     /*public*/ float perlinHeightScale = 0.09f;
-    [SerializeField] SO_PerlinValues perlinValues;
+    [SerializeField] SO_PerlinValues perlinValues = null;
 
     // Voronoi -----------------------
     /*public*/ int vPeakCount = 3;
@@ -25,14 +25,14 @@ public class GenerateTerrain : MonoBehaviour
     /*public*/ float vMinHeight = 0.25f;
     /*public*/ float vMaxHeight = 0.4f;
     /*public*/ VoronoiType voronoiType = VoronoiType.Linear;
-    [SerializeField] SO_Voronoi voronoiValues;
+    [SerializeField] SO_Voronoi voronoiValues = null;
 
     // Midpoint Displacement ------------------------
     /*public*/ int mpdHeightMin = -5;
     /*public*/ int mpdHeightMax = 5;
     /*public*/ int mpdHeightDampenerPower = 2;
     /*public*/ int mpdRoughness = 2;
-    [SerializeField] SO_MPD MPDValues;
+    [SerializeField] SO_MPD MPDValues = null;
 
     // Smooth ---------------------------------------
     public int smoothIterations = 1;

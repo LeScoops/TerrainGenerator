@@ -14,15 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vegetation:
   - mesh: {fileID: 100000, guid: c91c1eb85782d5748ace27eb4d7415bb, type: 3}
-    minHeight: 0.3
-    maxHeight: 0.4
-    scattering: 1
+    minHeight: 0
+    maxHeight: 1
+    scattering: 20
     minSlope: 0
-    maxSlope: 90
+    maxSlope: 45
     minScale: 0.5
     maxScale: 1
     colour1: {r: 0.9811321, g: 0.754361, b: 0.754361, a: 1}
     colour2: {r: 0.40359807, g: 0.6792453, b: 0.28515485, a: 1}
     lightColour: {r: 0.6792453, g: 0.21466713, b: 0.21466713, a: 1}
-  maximumTrees: 20000
-  treeSpacing: 1
+    numberOfTrees: 1000
+  - mesh: {fileID: 100016, guid: 469edab27ab6d004d84af2c4a851bd7f, type: 3}
+    minHeight: 0
+    maxHeight: 1
+    scattering: 20
+    minSlope: 0
+    maxSlope: 45
+    minScale: 3
+    maxScale: 4
+    colour1: {r: 0.9811321, g: 0.754361, b: 0.754361, a: 1}
+    colour2: {r: 0.40359807, g: 0.6792453, b: 0.28515485, a: 1}
+    lightColour: {r: 0.6792453, g: 0.21466713, b: 0.21466713, a: 1}
+    numberOfTrees: 50
+  generationType: 1
+  maximumTrees: 1000
+  treeSpacing: 20

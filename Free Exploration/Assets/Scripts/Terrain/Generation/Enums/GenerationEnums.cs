@@ -14,3 +14,10 @@ public enum VoronoiType
     Combined,
     SinPow
 };
+
+public enum DetailGenerationTypes
+{
+    Grid,
+    Random,
+    Islands
+}

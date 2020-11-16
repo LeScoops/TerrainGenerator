@@ -8,6 +8,8 @@ using UnityEngine;
 [CanEditMultipleObjects]
 public class DetailsEditor : Editor
 {
+    SerializedProperty givenLayerMask;
+
     // Smooth ----------------------
     SerializedProperty smoothIterations;
 
@@ -62,6 +64,7 @@ public class DetailsEditor : Editor
     private void OnEnable()
     {
         smoothIterations = serializedObject.FindProperty("smoothIterations");
+        givenLayerMask = serializedObject.FindProperty("givenLayerMask");
 
         //vegMapTable = new GUITableState("vegMapTable");
         //maximumTrees = serializedObject.FindProperty("maximumTrees");
@@ -105,6 +108,8 @@ public class DetailsEditor : Editor
     {
         serializedObject.Update();
         GenerateDetails terrain = (GenerateDetails)target;
+
+        EditorGUILayout.PropertyField(givenLayerMask);
 
         showVegetation = EditorGUILayout.Foldout(showVegetation, "Vegetation");
         if (showVegetation)
