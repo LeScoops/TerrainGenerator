@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "so_Trees", menuName = "Scriptable Objects/Values/Trees")]
 public class SO_Trees : ScriptableObject
 {
-    //Vegetation ----------------------------------
     [System.Serializable]
     public class Vegetation
     {

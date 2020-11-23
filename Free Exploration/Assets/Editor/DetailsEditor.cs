@@ -14,17 +14,14 @@ public class DetailsEditor : Editor
     SerializedProperty smoothIterations;
 
     // Vegetation -----------------
-    //GUITableState vegMapTable;
-    //SerializedProperty vegetation;
-    //SerializedProperty maximumTrees;
-    //SerializedProperty treeSpacing;
     SerializedProperty treeValues;
 
     // Details --------------------
-    GUITableState detailMapTable;
-    SerializedProperty details;
-    SerializedProperty maxDetails;
-    SerializedProperty detailSpacing;
+    //GUITableState detailMapTable;
+    //SerializedProperty details;
+    //SerializedProperty maxDetails;
+    //SerializedProperty detailSpacing;
+    SerializedProperty detailValues;
 
     // Water ----------------------
     SerializedProperty waterHeight;
@@ -66,16 +63,13 @@ public class DetailsEditor : Editor
         smoothIterations = serializedObject.FindProperty("smoothIterations");
         givenLayerMask = serializedObject.FindProperty("givenLayerMask");
 
-        //vegMapTable = new GUITableState("vegMapTable");
-        //maximumTrees = serializedObject.FindProperty("maximumTrees");
-        //treeSpacing = serializedObject.FindProperty("treeSpacing");
-        //vegetation = serializedObject.FindProperty("vegetation");
         treeValues = serializedObject.FindProperty("treeValues");
+        detailValues = serializedObject.FindProperty("detailValues");
 
-        detailMapTable = new GUITableState("detailMapTable");
-        details = serializedObject.FindProperty("details");
-        maxDetails = serializedObject.FindProperty("maxDetails");
-        detailSpacing = serializedObject.FindProperty("detailSpacing");
+        //detailMapTable = new GUITableState("detailMapTable");
+        //details = serializedObject.FindProperty("details");
+        //maxDetails = serializedObject.FindProperty("maxDetails");
+        //detailSpacing = serializedObject.FindProperty("detailSpacing");
 
         waterHeight = serializedObject.FindProperty("waterHeight");
         waterGameObject = serializedObject.FindProperty("waterGameObject");
@@ -116,20 +110,6 @@ public class DetailsEditor : Editor
         {
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             GUILayout.Label("Vegetation", EditorStyles.boldLabel);
-            //EditorGUILayout.IntSlider(maximumTrees, 0, 10000, new GUIContent("Maximum Trees"));
-            //EditorGUILayout.IntSlider(treeSpacing, 2, 20, new GUIContent("Tree Spacing"));
-            //vegMapTable = GUITableLayout.DrawTable(vegMapTable, serializedObject.FindProperty("vegetation"));
-            //GUILayout.Space(20);
-            //EditorGUILayout.BeginHorizontal();
-            //if (GUILayout.Button("+"))
-            //{
-            //    terrain.AddNewVegetation();
-            //}
-            //if (GUILayout.Button("-"))
-            //{
-            //    terrain.RemoveVegetation();
-            //}
-            //EditorGUILayout.EndHorizontal();
             EditorGUILayout.PropertyField(treeValues);
             if (GUILayout.Button("Apply Vegetation"))
             {
@@ -142,21 +122,22 @@ public class DetailsEditor : Editor
         {
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             GUILayout.Label("Details", EditorStyles.boldLabel);
-            EditorGUILayout.IntSlider(maxDetails, 0, 5000, new GUIContent("Maximum Details"));
-            EditorGUILayout.IntSlider(detailSpacing, 1, 20, new GUIContent("Detail Spacing"));
-            detailMapTable = GUITableLayout.DrawTable(detailMapTable, serializedObject.FindProperty("details"));
-            terrain.GetComponent<Terrain>().detailObjectDistance = maxDetails.intValue;
-            GUILayout.Space(20);
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("+"))
-            {
-                terrain.AddNewDetail();
-            }
-            if (GUILayout.Button("-"))
-            {
-                terrain.RemoveDetail();
-            }
-            EditorGUILayout.EndHorizontal();
+            //EditorGUILayout.IntSlider(maxDetails, 0, 5000, new GUIContent("Maximum Details"));
+            //EditorGUILayout.IntSlider(detailSpacing, 1, 20, new GUIContent("Detail Spacing"));
+            //detailMapTable = GUITableLayout.DrawTable(detailMapTable, serializedObject.FindProperty("details"));
+            //terrain.GetComponent<Terrain>().detailObjectDistance = maxDetails.intValue;
+            //GUILayout.Space(20);
+            //EditorGUILayout.BeginHorizontal();
+            //if (GUILayout.Button("+"))
+            //{
+            //    terrain.AddNewDetail();
+            //}
+            //if (GUILayout.Button("-"))
+            //{
+            //    terrain.RemoveDetail();
+            //}
+            //EditorGUILayout.EndHorizontal();
+            EditorGUILayout.PropertyField(detailValues);
             if (GUILayout.Button("Apply Details"))
             {
                 terrain.AddDetails();

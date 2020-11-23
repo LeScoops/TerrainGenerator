@@ -415,24 +415,7 @@ MonoBehaviour:
     m_Bits: 256
   smoothIterations: 1
   treeValues: {fileID: 11400000, guid: eec635caab7ae284ca2d36f73544342b, type: 2}
-  details:
-  - prototype: {fileID: 0}
-    prototypeTexture: {fileID: 0}
-    minHeight: 0.1
-    maxHeight: 0.2
-    minSlope: 0
-    maxSlope: 1
-    dryColour: {r: 1, g: 1, b: 1, a: 1}
-    healthyColour: {r: 1, g: 1, b: 1, a: 1}
-    heightRange: {x: 1, y: 1}
-    widthRange: {x: 1, y: 1}
-    noiseSpread: 0.5
-    overlap: 0.01
-    feather: 0.5
-    density: 0.5
-    remove: 0
-  maxDetails: 5000
-  detailSpacing: 5
+  detailValues: {fileID: 11400000, guid: 24faf5dc9913423448e0013fba3cc4cc, type: 2}
   waterHeight: 0.5
   waterGameObject: {fileID: 0}
   shoreLineMaterial: {fileID: 0}

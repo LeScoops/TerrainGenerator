@@ -21,31 +21,7 @@ public class GenerateDetails : MonoBehaviour
     [SerializeField] SO_Trees treeValues = null;
 
     //Details --------------------------------------
-    [System.Serializable]
-    public class Detail
-    {
-        public GameObject prototype = null;
-        public Texture2D prototypeTexture = null;
-        public float minHeight = 0.1f;
-        public float maxHeight = 0.2f;
-        public float minSlope = 0;
-        public float maxSlope = 1;
-        public Color dryColour = Color.white;
-        public Color healthyColour = Color.white;
-        public Vector2 heightRange = new Vector2(1, 1);
-        public Vector2 widthRange = new Vector2(1, 1);
-        public float noiseSpread = 0.5f;
-        public float overlap = 0.01f;
-        public float feather = 0.5f;
-        public float density = 0.5f;
-        public bool remove = false;
-    }
-    public List<Detail> details = new List<Detail>()
-    {
-        new Detail()
-    };
-    public int maxDetails = 5000;
-    public int detailSpacing = 5;
+    [SerializeField] SO_Details detailValues = null;   
 
     //Water ----------------------------------------
     public float waterHeight = 0.5f;
@@ -202,10 +178,12 @@ public class GenerateDetails : MonoBehaviour
     //Details -------------------------------------------
     public void AddDetails()
     {
+        if (!detailValues) return;
+
         DetailPrototype[] newDetailPrototypes;
-        newDetailPrototypes = new DetailPrototype[details.Count];
+        newDetailPrototypes = new DetailPrototype[detailValues.details.Count];
         int dindex = 0;
-        foreach (Detail d in details)
+        foreach (SO_Details.Detail d in detailValues.details)
         {
             newDetailPrototypes[dindex] = new DetailPrototype();
             newDetailPrototypes[dindex].prototype = d.prototype;
@@ -232,52 +210,32 @@ public class GenerateDetails : MonoBehaviour
         terrainData.detailPrototypes = newDetailPrototypes;
 
         float[,] heightMap = terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution);
-
         for (int i = 0; i < terrainData.detailPrototypes.Length; i++)
         {
+            
             int[,] detailMap = new int[terrainData.detailWidth, terrainData.detailHeight];
-            for (int y = 0; y < terrainData.detailHeight; y += detailSpacing)
+            for (int y = 0; y < terrainData.detailResolution; y += detailValues.details[i].inDetailSpacing)
             {
-                for (int x = 0; x < terrainData.detailWidth; x += detailSpacing)
+                for (int x = 0; x < terrainData.detailResolution; x += detailValues.details[i].inDetailSpacing)
                 {
-                    if (UnityEngine.Random.Range(0.0f, 1.0f) > details[i].density) continue;
+                    if (UnityEngine.Random.Range(0.0f, 1.0f) > detailValues.details[i].density) continue;
                     int xHM = (int)(x / (float)terrainData.detailWidth * terrainData.heightmapResolution);
                     int yHM = (int)(y / (float)terrainData.detailHeight * terrainData.heightmapResolution);
-                    float thisNoise = TerrainUtils.Map(Mathf.PerlinNoise(x * details[i].feather,
-                        y * details[i].feather), 0, 1, 0.5f, 1);
-                    float thisHeightStart = details[i].minHeight * thisNoise - details[i].overlap * thisNoise;
-                    float nextHeightStart = details[i].maxHeight * thisNoise + details[i].overlap * thisNoise;
+                    float thisNoise = TerrainUtils.Map(Mathf.PerlinNoise(x * detailValues.details[i].feather,
+                        y * detailValues.details[i].feather), 0, 1, 0.5f, 1);
+                    float thisHeightStart = detailValues.details[i].minHeight * thisNoise - detailValues.details[i].overlap * thisNoise;
+                    float nextHeightStart = detailValues.details[i].maxHeight * thisNoise + detailValues.details[i].overlap * thisNoise;
                     float thisHeight = heightMap[yHM, xHM];
-                    float steepness = terrainData.GetSteepness(xHM / (float)terrainData.size.x, yHM / (float)terrainData.size.z);
+                    float steepness = terrainData.GetSteepness(xHM / (float)terrainData.heightmapResolution, yHM / (float)terrainData.heightmapResolution);
                     if ((thisHeight >= thisHeightStart && thisHeight <= nextHeightStart) &&
-                        (steepness >= details[i].minSlope && steepness <= details[i].maxSlope))
+                        (steepness >= detailValues.details[i].minSlope && steepness <= detailValues.details[i].maxSlope))
                     {
                         detailMap[y, x] = 1;
                     }
                 }
             }
             terrainData.SetDetailLayer(0, 0, i, detailMap);
-        }
-    }
-    public void AddNewDetail()
-    {
-        details.Add(new Detail());
-    }
-    public void RemoveDetail()
-    {
-        List<Detail> keptDetails = new List<Detail>();
-        for (int i = 0; i < details.Count; i++)
-        {
-            if (!details[i].remove)
-            {
-                keptDetails.Add(details[i]);
-            }
-        }
-        if (keptDetails.Count == 0)
-        {
-            keptDetails.Add(details[0]);
-        }
-        details = keptDetails;
+        }           
     }
 
     //Water -----------------------------------------
