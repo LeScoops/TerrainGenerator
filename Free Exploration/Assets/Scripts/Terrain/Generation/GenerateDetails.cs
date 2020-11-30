@@ -21,7 +21,10 @@ public class GenerateDetails : MonoBehaviour
     [SerializeField] SO_Trees treeValues = null;
 
     //Details --------------------------------------
-    [SerializeField] SO_Details detailValues = null;   
+    [SerializeField] SO_Details detailValues = null;
+
+    //Ground Textures -----------------------------
+    [SerializeField] SO_GroundTextures groundTextureValues = null;
 
     //Water ----------------------------------------
     public float waterHeight = 0.5f;
@@ -236,6 +239,60 @@ public class GenerateDetails : MonoBehaviour
             }
             terrainData.SetDetailLayer(0, 0, i, detailMap);
         }           
+    }
+
+    //Ground Textures -------------------------------
+    public void GroundTextures()
+    {
+        if (!groundTextureValues) return;
+        TerrainLayer[] newSplatPrototype;
+        newSplatPrototype = new TerrainLayer[groundTextureValues.groundTextures.Count];
+        int spindex = 0;
+        foreach (SO_GroundTextures.GroundTexture sh in groundTextureValues.groundTextures)
+        {
+            newSplatPrototype[spindex] = new TerrainLayer();
+            newSplatPrototype[spindex].diffuseTexture = sh.texture;
+            newSplatPrototype[spindex].tileOffset = sh.tileOffset;
+            newSplatPrototype[spindex].tileSize = sh.tileSize;
+            newSplatPrototype[spindex].diffuseTexture.Apply(true);
+            string path = "Assets/TerrainAssets/Layers/Layer_" + spindex + ".terrainlayer";
+            AssetDatabase.CreateAsset(newSplatPrototype[spindex], path);
+            spindex++;
+            Selection.activeObject = this.gameObject;
+        }
+        terrainData.terrainLayers = newSplatPrototype;
+
+        float[,] heightMap = terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution);
+        float[,,] splatMapData = new float[terrainData.alphamapWidth, terrainData.alphamapHeight, terrainData.alphamapLayers];
+
+        for (int y = 0; y < terrainData.alphamapHeight; y++)
+        {
+            for (int x = 0; x < terrainData.alphamapWidth; x++)
+            {
+                float[] splat = new float[terrainData.alphamapLayers];
+                for (int i = 0; i < groundTextureValues.groundTextures.Count; i++)
+                {
+                    float noise = Mathf.PerlinNoise(x * groundTextureValues.groundTextures[i].xNoise, y * groundTextureValues.groundTextures[i].yNoise)
+                        * groundTextureValues.groundTextures[i].noiseScale;
+                    float offset = groundTextureValues.groundTextures[i].offset + noise;
+                    float thisHeightStart = groundTextureValues.groundTextures[i].minHeight - offset;
+                    float thisHeightStop = groundTextureValues.groundTextures[i].maxHeight + offset;
+                    float steepness = terrainData.GetSteepness(y / (float)terrainData.alphamapHeight,
+                        x / (float)terrainData.alphamapWidth);
+                    if (heightMap[x, y] >= thisHeightStart && heightMap[x, y] <= thisHeightStop &&
+                        steepness >= groundTextureValues.groundTextures[i].minSlope && steepness <= groundTextureValues.groundTextures[i].maxSlope)
+                    {
+                        splat[i] = 1;
+                    }
+                }
+                NormalizeVector(splat);
+                for (int j = 0; j < groundTextureValues.groundTextures.Count; j++)
+                {
+                    splatMapData[x, y, j] = splat[j];
+                }
+            }
+        }
+        terrainData.SetAlphamaps(0, 0, splatMapData);
     }
 
     //Water -----------------------------------------
@@ -652,5 +709,18 @@ public class GenerateDetails : MonoBehaviour
     float[,] GetHeightMap()
     {
         return terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution);
+    }
+
+    void NormalizeVector(float[] v)
+    {
+        float total = 0;
+        for (int i = 0; i < v.Length; i++)
+        {
+            total += v[i];
+        }
+        for (int i = 0; i < v.Length; i++)
+        {
+            v[i] /= total;
+        }
     }
 }

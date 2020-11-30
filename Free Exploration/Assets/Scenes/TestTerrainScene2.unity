@@ -416,6 +416,7 @@ MonoBehaviour:
   smoothIterations: 1
   treeValues: {fileID: 11400000, guid: eec635caab7ae284ca2d36f73544342b, type: 2}
   detailValues: {fileID: 11400000, guid: 24faf5dc9913423448e0013fba3cc4cc, type: 2}
+  groundTextureValues: {fileID: 11400000, guid: db729bd5a992a224d92c022df92faee1, type: 2}
   waterHeight: 0.5
   waterGameObject: {fileID: 0}
   shoreLineMaterial: {fileID: 0}

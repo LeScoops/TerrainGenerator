@@ -17,11 +17,10 @@ public class DetailsEditor : Editor
     SerializedProperty treeValues;
 
     // Details --------------------
-    //GUITableState detailMapTable;
-    //SerializedProperty details;
-    //SerializedProperty maxDetails;
-    //SerializedProperty detailSpacing;
     SerializedProperty detailValues;
+
+    // Ground Textures
+    SerializedProperty groundTextureValues;
 
     // Water ----------------------
     SerializedProperty waterHeight;
@@ -54,6 +53,7 @@ public class DetailsEditor : Editor
 
     bool showVegetation = false;
     bool showDetails = false;
+    bool showGroundTextures = false;
     bool showWater = false;
     bool showErosion = false;
     bool showClouds = false;
@@ -65,11 +65,7 @@ public class DetailsEditor : Editor
 
         treeValues = serializedObject.FindProperty("treeValues");
         detailValues = serializedObject.FindProperty("detailValues");
-
-        //detailMapTable = new GUITableState("detailMapTable");
-        //details = serializedObject.FindProperty("details");
-        //maxDetails = serializedObject.FindProperty("maxDetails");
-        //detailSpacing = serializedObject.FindProperty("detailSpacing");
+        groundTextureValues = serializedObject.FindProperty("groundTextureValues");
 
         waterHeight = serializedObject.FindProperty("waterHeight");
         waterGameObject = serializedObject.FindProperty("waterGameObject");
@@ -122,25 +118,22 @@ public class DetailsEditor : Editor
         {
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             GUILayout.Label("Details", EditorStyles.boldLabel);
-            //EditorGUILayout.IntSlider(maxDetails, 0, 5000, new GUIContent("Maximum Details"));
-            //EditorGUILayout.IntSlider(detailSpacing, 1, 20, new GUIContent("Detail Spacing"));
-            //detailMapTable = GUITableLayout.DrawTable(detailMapTable, serializedObject.FindProperty("details"));
-            //terrain.GetComponent<Terrain>().detailObjectDistance = maxDetails.intValue;
-            //GUILayout.Space(20);
-            //EditorGUILayout.BeginHorizontal();
-            //if (GUILayout.Button("+"))
-            //{
-            //    terrain.AddNewDetail();
-            //}
-            //if (GUILayout.Button("-"))
-            //{
-            //    terrain.RemoveDetail();
-            //}
-            //EditorGUILayout.EndHorizontal();
             EditorGUILayout.PropertyField(detailValues);
             if (GUILayout.Button("Apply Details"))
             {
                 terrain.AddDetails();
+            }
+        }
+
+        showGroundTextures = EditorGUILayout.Foldout(showGroundTextures, "Ground Textures");
+        if (showGroundTextures)
+        {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Ground Textures", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(groundTextureValues);
+            if (GUILayout.Button("Apply Textures"))
+            {
+                terrain.GroundTextures();
             }
         }
 
