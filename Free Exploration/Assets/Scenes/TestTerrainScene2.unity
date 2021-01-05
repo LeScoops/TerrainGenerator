@@ -333,6 +333,7 @@ MonoBehaviour:
   resetTerrain: 1
   terrain: {fileID: 1168034672}
   terrainData: {fileID: 15600000, guid: f98f5ae4dc46ded4a855d88619c8302a, type: 2}
+  completeBiomeValues: {fileID: 11400000, guid: 0507f3cd650851345942ed4c65627b4e, type: 2}
   perlinValues: {fileID: 11400000, guid: 8f1923a5dc5a5af468bf199f1d7ca9ac, type: 2}
   voronoiValues: {fileID: 11400000, guid: 7eb8bdcd77880ee459f90ced041e7c8e, type: 2}
   MPDValues: {fileID: 11400000, guid: a106ca4819e6ec14d9c7d5c6e10b16d5, type: 2}
@@ -417,10 +418,10 @@ MonoBehaviour:
   treeValues: {fileID: 11400000, guid: eec635caab7ae284ca2d36f73544342b, type: 2}
   detailValues: {fileID: 11400000, guid: 24faf5dc9913423448e0013fba3cc4cc, type: 2}
   groundTextureValues: {fileID: 11400000, guid: db729bd5a992a224d92c022df92faee1, type: 2}
-  waterHeight: 0.5
-  waterGameObject: {fileID: 0}
-  shoreLineMaterial: {fileID: 0}
-  shoreSize: 10
+  waterHeight: 0.01
+  waterGameObject: {fileID: -927199367670048503, guid: c8c97c5e6fffa9e4596aeabe219fe18f, type: 3}
+  shoreLineMaterial: {fileID: 2100000, guid: f4e93af3a505d0a4e94876d8b7ed7c3d, type: 2}
+  shoreSize: 13.7
   erosionType: 0
   erosionStrength: 0.1
   erosionAmount: 0.01

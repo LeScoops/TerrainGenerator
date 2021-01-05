@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c283ec9cc8ff641479bd89b77bc0ae8b, type: 3}
+  m_Name: so_GroundTexture
+  m_EditorClassIdentifier: 
+  groundTextures:
+  - texture: {fileID: 2800000, guid: c6e0767b1f8c34890ac245217f4b9731, type: 3}
+    minHeight: 0
+    maxHeight: 0.2
+    minSlope: 0
+    maxSlope: 90
+    offset: 0.01
+    xNoise: 0.2
+    yNoise: 0.2
+    noiseScale: 0.05
+    tileOffset: {x: 0, y: 0}
+    tileSize: {x: 50, y: 50}
+  - texture: {fileID: 2800000, guid: 18214e9d6af6248559d501391856f1c7, type: 3}
+    minHeight: 0.2
+    maxHeight: 1
+    minSlope: 0
+    maxSlope: 90
+    offset: 0.01
+    xNoise: 0.1
+    yNoise: 0.1
+    noiseScale: 0.05
+    tileOffset: {x: 0, y: 0}
+    tileSize: {x: 50, y: 50}

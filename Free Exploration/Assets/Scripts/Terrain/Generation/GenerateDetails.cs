@@ -307,7 +307,7 @@ public class GenerateDetails : MonoBehaviour
         water.transform.position = this.transform.position + new Vector3(terrainData.size.x / 2,
                                                                         waterHeight * terrainData.size.y,
                                                                         terrainData.size.z / 2);
-        water.transform.localScale = new Vector3(terrainData.size.x, 1, terrainData.size.z);
+        water.transform.localScale = new Vector3(terrainData.size.x / 2, 1, terrainData.size.z / 2);
     }
     public void DrawShoreLine()
     {

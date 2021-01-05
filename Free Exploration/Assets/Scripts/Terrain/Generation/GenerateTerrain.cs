@@ -10,6 +10,9 @@ public class GenerateTerrain : MonoBehaviour
     public Terrain terrain;
     public TerrainData terrainData;
 
+    //TODO Do Something
+    [SerializeField] SO_CompleteBiome completeBiomeValues = null;
+
     // Perlin Noise ----------------
     /*public*/ float perlinXScale = 0.01f;
     /*public*/ float perlinYScale = 0.01f;
@@ -42,6 +45,19 @@ public class GenerateTerrain : MonoBehaviour
     {
         terrain = GetComponent<Terrain>();
         terrainData = terrain.terrainData;
+    }
+
+    //TODO Do Something
+    public void GenerateTerrains()
+    {
+        if (completeBiomeValues)
+        {
+            completeBiomeValues.baseTerrainGeneration.GenerateTerrain(terrainData, GetHeightMap());
+        }
+        else
+        {
+            Debug.Log("Generate Failed");
+        }
     }
 
     // Single Perlin --------------------------------
