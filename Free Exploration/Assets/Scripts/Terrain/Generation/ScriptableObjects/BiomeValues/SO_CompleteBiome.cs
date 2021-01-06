@@ -5,5 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "so_CompleteBiome", menuName = "Scriptable Objects/Biomes/Complete")]
 public class SO_CompleteBiome : ScriptableObject
 {
-    public BaseTerrainGeneration baseTerrainGeneration;    
+    public BaseTerrainGeneration baseTerrainGeneration;
+    public BaseDetailsGeneration baseDetailsGeneration;
 }

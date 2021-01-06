@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fff3d4987f5efd45991200ee6555184, type: 3}
+  m_Name: so_CompleteDetailsTest
+  m_EditorClassIdentifier: 
+  details: {fileID: 11400000, guid: 24faf5dc9913423448e0013fba3cc4cc, type: 2}
+  trees: {fileID: 11400000, guid: eec635caab7ae284ca2d36f73544342b, type: 2}
+  groundTextures: {fileID: 11400000, guid: db729bd5a992a224d92c022df92faee1, type: 2}

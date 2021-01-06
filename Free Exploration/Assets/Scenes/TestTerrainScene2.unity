@@ -330,13 +330,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b62873cb3272df8498520b2131ef3324, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resetTerrain: 1
+  resetTerrain: 0
   terrain: {fileID: 1168034672}
   terrainData: {fileID: 15600000, guid: f98f5ae4dc46ded4a855d88619c8302a, type: 2}
   completeBiomeValues: {fileID: 11400000, guid: 0507f3cd650851345942ed4c65627b4e, type: 2}
-  perlinValues: {fileID: 11400000, guid: 8f1923a5dc5a5af468bf199f1d7ca9ac, type: 2}
-  voronoiValues: {fileID: 11400000, guid: 7eb8bdcd77880ee459f90ced041e7c8e, type: 2}
-  MPDValues: {fileID: 11400000, guid: a106ca4819e6ec14d9c7d5c6e10b16d5, type: 2}
   smoothIterations: 5
 --- !u!154 &1168034671
 TerrainCollider:
@@ -410,6 +407,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terrain: {fileID: 1168034672}
   terrainData: {fileID: 15600000, guid: f98f5ae4dc46ded4a855d88619c8302a, type: 2}
+  baseDetails: {fileID: 11400000, guid: 5c99cfc463061a746b2324d61fcc99b2, type: 2}
   terrainLayer: -1
   givenLayerMask:
     serializedVersion: 2

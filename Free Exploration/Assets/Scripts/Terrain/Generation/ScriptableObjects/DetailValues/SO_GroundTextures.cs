@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "so_GroundTexture", menuName = "Scriptable Objects/Values/GroundTexture")]
@@ -28,4 +29,69 @@ public class SO_GroundTextures : ScriptableObject
     {
         new GroundTexture()
     };
+
+    public void Generate(TerrainData terrainData, GameObject gameObject)
+    {
+        TerrainLayer[] newSplatPrototype;
+        newSplatPrototype = new TerrainLayer[groundTextures.Count];
+        int spindex = 0;
+        foreach (SO_GroundTextures.GroundTexture sh in groundTextures)
+        {
+            newSplatPrototype[spindex] = new TerrainLayer();
+            newSplatPrototype[spindex].diffuseTexture = sh.texture;
+            newSplatPrototype[spindex].tileOffset = sh.tileOffset;
+            newSplatPrototype[spindex].tileSize = sh.tileSize;
+            newSplatPrototype[spindex].diffuseTexture.Apply(true);
+            string path = "Assets/TerrainAssets/Layers/Layer_" + spindex + ".terrainlayer";
+            AssetDatabase.CreateAsset(newSplatPrototype[spindex], path);
+            spindex++;
+            Selection.activeObject = gameObject;
+        }
+        terrainData.terrainLayers = newSplatPrototype;
+
+        float[,] heightMap = terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution);
+        float[,,] splatMapData = new float[terrainData.alphamapWidth, terrainData.alphamapHeight, terrainData.alphamapLayers];
+
+        for (int y = 0; y < terrainData.alphamapHeight; y++)
+        {
+            for (int x = 0; x < terrainData.alphamapWidth; x++)
+            {
+                float[] splat = new float[terrainData.alphamapLayers];
+                for (int i = 0; i < groundTextures.Count; i++)
+                {
+                    float noise = Mathf.PerlinNoise(x * groundTextures[i].xNoise, y * groundTextures[i].yNoise)
+                        * groundTextures[i].noiseScale;
+                    float offset = groundTextures[i].offset + noise;
+                    float thisHeightStart = groundTextures[i].minHeight - offset;
+                    float thisHeightStop = groundTextures[i].maxHeight + offset;
+                    float steepness = terrainData.GetSteepness(y / (float)terrainData.alphamapHeight,
+                        x / (float)terrainData.alphamapWidth);
+                    if (heightMap[x, y] >= thisHeightStart && heightMap[x, y] <= thisHeightStop &&
+                        steepness >= groundTextures[i].minSlope && steepness <= groundTextures[i].maxSlope)
+                    {
+                        splat[i] = 1;
+                    }
+                }
+                NormalizeVector(splat);
+                for (int j = 0; j < groundTextures.Count; j++)
+                {
+                    splatMapData[x, y, j] = splat[j];
+                }
+            }
+        }
+        terrainData.SetAlphamaps(0, 0, splatMapData);
+    }
+
+    void NormalizeVector(float[] v)
+    {
+        float total = 0;
+        for (int i = 0; i < v.Length; i++)
+        {
+            total += v[i];
+        }
+        for (int i = 0; i < v.Length; i++)
+        {
+            v[i] /= total;
+        }
+    }
 }

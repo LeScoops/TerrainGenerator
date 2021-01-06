@@ -8,6 +8,9 @@ using UnityEngine;
 [CanEditMultipleObjects]
 public class DetailsEditor : Editor
 {
+    //TODO DO Something
+    SerializedProperty baseDetails;
+
     SerializedProperty givenLayerMask;
 
     // Smooth ----------------------
@@ -60,12 +63,15 @@ public class DetailsEditor : Editor
 
     private void OnEnable()
     {
+        //TODO CleanUP
+        baseDetails = serializedObject.FindProperty("baseDetails");
+
         smoothIterations = serializedObject.FindProperty("smoothIterations");
         givenLayerMask = serializedObject.FindProperty("givenLayerMask");
 
-        treeValues = serializedObject.FindProperty("treeValues");
-        detailValues = serializedObject.FindProperty("detailValues");
-        groundTextureValues = serializedObject.FindProperty("groundTextureValues");
+        //treeValues = serializedObject.FindProperty("treeValues");
+        //detailValues = serializedObject.FindProperty("detailValues");
+        //groundTextureValues = serializedObject.FindProperty("groundTextureValues");
 
         waterHeight = serializedObject.FindProperty("waterHeight");
         waterGameObject = serializedObject.FindProperty("waterGameObject");
@@ -99,43 +105,52 @@ public class DetailsEditor : Editor
         serializedObject.Update();
         GenerateDetails terrain = (GenerateDetails)target;
 
+        //TODO Clean Up
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        GUILayout.Label("BaseDetails", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(baseDetails);
+        if (GUILayout.Button("Apply Details"))
+        {
+            terrain.Generate();
+        }
+
         EditorGUILayout.PropertyField(givenLayerMask);
 
-        showVegetation = EditorGUILayout.Foldout(showVegetation, "Vegetation");
-        if (showVegetation)
-        {
-            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-            GUILayout.Label("Vegetation", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(treeValues);
-            if (GUILayout.Button("Apply Vegetation"))
-            {
-                terrain.PlantVegetation();
-            }
-        }
+        //showVegetation = EditorGUILayout.Foldout(showVegetation, "Vegetation");
+        //if (showVegetation)
+        //{
+        //    EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        //    GUILayout.Label("Vegetation", EditorStyles.boldLabel);
+        //    EditorGUILayout.PropertyField(treeValues);
+        //    if (GUILayout.Button("Apply Vegetation"))
+        //    {
+        //        terrain.PlantVegetation();
+        //    }
+        //}
 
-        showDetails = EditorGUILayout.Foldout(showDetails, "Details");
-        if (showDetails)
-        {
-            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-            GUILayout.Label("Details", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(detailValues);
-            if (GUILayout.Button("Apply Details"))
-            {
-                terrain.AddDetails();
-            }
-        }
+        //showDetails = EditorGUILayout.Foldout(showDetails, "Details");
+        //if (showDetails)
+        //{
+        //    EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        //    GUILayout.Label("Details", EditorStyles.boldLabel);
+        //    EditorGUILayout.PropertyField(detailValues);
+        //    if (GUILayout.Button("Apply Details"))
+        //    {
+        //        terrain.AddDetails();
+        //    }
+        //}
 
-        showGroundTextures = EditorGUILayout.Foldout(showGroundTextures, "Ground Textures");
-        if (showGroundTextures)
-        {
-            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-            GUILayout.Label("Ground Textures", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(groundTextureValues);
-            if (GUILayout.Button("Apply Textures"))
-            {
-                terrain.GroundTextures();
-            }
-        }
+        //showGroundTextures = EditorGUILayout.Foldout(showGroundTextures, "Ground Textures");
+        //if (showGroundTextures)
+        //{
+        //    EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        //    GUILayout.Label("Ground Textures", EditorStyles.boldLabel);
+        //    EditorGUILayout.PropertyField(groundTextureValues);
+        //    if (GUILayout.Button("Apply Textures"))
+        //    {
+        //        terrain.GroundTextures();
+        //    }
+        //}
 
         showWater = EditorGUILayout.Foldout(showWater, "Water");
         if (showWater)
