@@ -13,8 +13,6 @@ public class SO_PerlinValues : BaseTerrainGeneration
 
     public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap)
     {
-        Debug.Log("Perlin Values Test");
-
         float offset = Random.Range(0, 10000);
         for (int y = 0; y < terrainData.heightmapResolution; y++)
         {

@@ -16,4 +16,4 @@ MonoBehaviour:
   perlinYScale: 0.01
   perlinOctaves: 3
   perlinPersistance: 8
-  perlinHeightScale: 0.09
+  perlinHeightScale: 0.11

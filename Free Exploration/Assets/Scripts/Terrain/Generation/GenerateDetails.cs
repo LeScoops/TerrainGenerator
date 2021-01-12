@@ -6,34 +6,18 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class GenerateDetails : MonoBehaviour
 {
-    public Terrain terrain;
-    public TerrainData terrainData;
+    Terrain terrain;
+    TerrainData terrainData;
 
-    //TODO DO Something
-    [SerializeField] BaseDetailsGeneration baseDetails;
-
-    [SerializeField]
-    int terrainLayer = 8;
+    [Header("Generate Detail Toggle")]
+    [SerializeField] bool generateDetails = false;
+    [SerializeField] BaseDetailsGeneration baseDetails = null;
+    [Header("TODO: Other things----")]
 
     public LayerMask givenLayerMask;
 
     //Smooth ---------------------------------------
     public int smoothIterations = 1;
-
-    //Vegetation ----------------------------------    
-    [SerializeField] SO_Trees treeValues = null;
-
-    //Details --------------------------------------
-    [SerializeField] SO_Details detailValues = null;
-
-    //Ground Textures -----------------------------
-    [SerializeField] SO_GroundTextures groundTextureValues = null;
-
-    //Water ----------------------------------------
-    public float waterHeight = 0.5f;
-    public GameObject waterGameObject;
-    public Material shoreLineMaterial;
-    public float shoreSize = 10.0f;
 
     //Erosion --------------------------------------
     public enum ErosionType
@@ -68,328 +52,20 @@ public class GenerateDetails : MonoBehaviour
         terrainData = terrain.terrainData;
     }
 
-    //TODO Clean Up
+    private void Update()
+    {
+        if (generateDetails)
+        {
+            Generate();
+            generateDetails = false;
+        }
+    }
+
     public void Generate()
     {
         if (baseDetails)
         {
             baseDetails.GenerateDetails(terrainData, this.gameObject, this.transform);
-        }
-    }
-
-    ////Vegetation -------------------------------------
-    //public void PlantVegetation()
-    //{
-    //    if (!treeValues) return;
-
-    //    TreePrototype[] newTreePrototypes;
-    //    newTreePrototypes = new TreePrototype[treeValues.vegetation.Count];
-    //    int tindex = 0;
-    //    foreach (SO_Trees.Vegetation t in treeValues.vegetation)
-    //    {
-    //        newTreePrototypes[tindex] = new TreePrototype();
-    //        newTreePrototypes[tindex].prefab = t.mesh;
-    //        tindex++;
-    //    }
-    //    terrainData.treePrototypes = newTreePrototypes;
-
-    //    if (treeValues.generationType == DetailGenerationTypes.Grid)
-    //    {
-    //        Debug.Log("Grid Tree Generation");
-    //        List<TreeInstance> allVegetation = new List<TreeInstance>();
-    //        for (int z = 0; z < terrainData.size.z; z += treeValues.treeSpacing)
-    //        {
-    //            for (int x = 0; x < terrainData.size.x; x += treeValues.treeSpacing)
-    //            {
-    //                for (int tp = 0; tp < terrainData.treePrototypes.Length; tp++)
-    //                {
-    //                    float thisHeight = terrainData.GetHeight(x, z) / terrainData.size.y;
-    //                    float thisHeightStart = treeValues.vegetation[tp].minHeight;
-    //                    float thisHeightEnd = treeValues.vegetation[tp].maxHeight;
-
-    //                    float steepness = terrainData.GetSteepness(x / terrainData.size.x, z / terrainData.size.z);
-
-    //                    if ((thisHeight >= thisHeightStart && thisHeight <= thisHeightEnd) &&
-    //                        steepness >= treeValues.vegetation[tp].minSlope && steepness <= treeValues.vegetation[tp].maxSlope)
-    //                    {
-    //                        TreeInstance instance = new TreeInstance();
-    //                        instance.position = new Vector3(
-    //                            (x + Random.Range(-treeValues.vegetation[tp].scattering, treeValues.vegetation[tp].scattering)) / terrainData.size.x,
-    //                            terrainData.GetHeight(x, z) / terrainData.size.y,
-    //                            (z + Random.Range(-treeValues.vegetation[tp].scattering, treeValues.vegetation[tp].scattering)) / terrainData.size.z);
-
-    //                        Vector3 treeWorldPos = new Vector3(instance.position.x * terrainData.size.x,
-    //                            instance.position.y * terrainData.size.y,
-    //                            instance.position.z * terrainData.size.z) + transform.position;
-
-    //                        RaycastHit hit;
-    //                        int layerMask = terrainLayer;
-    //                        if (Physics.Raycast(treeWorldPos, -Vector3.up, out hit, 100, layerMask) ||
-    //                            Physics.Raycast(treeWorldPos, Vector3.up, out hit, 100, layerMask))
-    //                        {
-    //                            float treeHeight = (hit.point.y - transform.position.y) / terrainData.size.y;
-    //                            instance.position = new Vector3(instance.position.x, treeHeight, instance.position.z);
-    //                            instance.rotation = Random.Range(0, 360);
-    //                            instance.prototypeIndex = tp;
-    //                            instance.color = Color.Lerp(treeValues.vegetation[tp].colour1, treeValues.vegetation[tp].colour2, Random.Range(0.0f, 1.0f));
-    //                            instance.lightmapColor = treeValues.vegetation[tp].lightColour;
-    //                            float scale = Random.Range(treeValues.vegetation[tp].minScale, treeValues.vegetation[tp].maxScale);
-    //                            instance.heightScale = scale;
-    //                            instance.widthScale = scale;
-    //                            allVegetation.Add(instance);
-    //                            if (allVegetation.Count >= treeValues.maximumTrees) goto TREESDONE;
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    TREESDONE:
-    //        terrainData.treeInstances = allVegetation.ToArray();
-    //    }
-    //    else if (treeValues.generationType == DetailGenerationTypes.Random)
-    //    {
-    //        List<TreeInstance> allVegetation = new List<TreeInstance>();
-    //        for (int tp = 0; tp < terrainData.treePrototypes.Length; tp++)
-    //        {
-    //            int treesSpawned = 0;
-    //            while (treesSpawned < treeValues.vegetation[tp].numberOfTrees)
-    //            {
-    //                TreeInstance instance = new TreeInstance();
-    //                int x = Random.Range(0, (int)terrainData.size.x);
-    //                int z = Random.Range(0, (int)terrainData.size.z);
-
-    //                if (terrainData.GetHeight(x, z) / terrainData.size.y < treeValues.vegetation[tp].minHeight ||
-    //                    terrainData.GetHeight(x, z) / terrainData.size.y > treeValues.vegetation[tp].maxHeight)
-    //                {
-    //                    continue;
-    //                }
-    //                instance.position = new Vector3(x / terrainData.size.x,
-    //                                                terrainData.GetHeight(x, z) / terrainData.size.y,
-    //                                                z / terrainData.size.z);
-
-    //                float targetX = instance.position.x * terrainData.size.x / terrainData.alphamapWidth;
-    //                float targetZ = instance.position.z * terrainData.size.z / terrainData.alphamapHeight;
-    //                if (targetX > 1f || targetZ > 1f) { continue; }
-
-    //                float steepness = terrainData.GetSteepness(targetX, targetZ);
-    //                if (steepness <= treeValues.vegetation[tp].minSlope - 0.1f || steepness >= treeValues.vegetation[tp].maxSlope) { continue; }
-
-    //                instance.position = new Vector3(targetX, instance.position.y, targetZ);
-    //                instance.rotation = Random.Range(0, 360);
-    //                instance.prototypeIndex = tp;
-    //                instance.color = Color.Lerp(treeValues.vegetation[tp].colour1, treeValues.vegetation[tp].colour2, Random.Range(0.0f, 1.0f));
-    //                instance.lightmapColor = treeValues.vegetation[tp].lightColour;
-    //                float scale = Random.Range(treeValues.vegetation[tp].minScale, treeValues.vegetation[tp].maxScale);
-    //                instance.heightScale = scale;
-    //                instance.widthScale = scale;
-    //                allVegetation.Add(instance);
-    //                treesSpawned++;
-    //            }              
-    //        }
-    //        terrainData.treeInstances = allVegetation.ToArray();
-    //    }
-    //}
-
-    ////Details -------------------------------------------
-    //public void AddDetails()
-    //{
-    //    if (!detailValues) return;
-
-    //    DetailPrototype[] newDetailPrototypes;
-    //    newDetailPrototypes = new DetailPrototype[detailValues.details.Count];
-    //    int dindex = 0;
-    //    foreach (SO_Details.Detail d in detailValues.details)
-    //    {
-    //        newDetailPrototypes[dindex] = new DetailPrototype();
-    //        newDetailPrototypes[dindex].prototype = d.prototype;
-    //        newDetailPrototypes[dindex].prototypeTexture = d.prototypeTexture;
-    //        newDetailPrototypes[dindex].dryColor = d.dryColour;
-    //        newDetailPrototypes[dindex].healthyColor = d.healthyColour;
-    //        newDetailPrototypes[dindex].minHeight = d.heightRange.x;
-    //        newDetailPrototypes[dindex].maxHeight = d.heightRange.y;
-    //        newDetailPrototypes[dindex].minWidth = d.widthRange.x;
-    //        newDetailPrototypes[dindex].maxWidth = d.widthRange.y;
-    //        newDetailPrototypes[dindex].noiseSpread = d.noiseSpread;
-    //        if (newDetailPrototypes[dindex].prototype)
-    //        {
-    //            newDetailPrototypes[dindex].usePrototypeMesh = true;
-    //            newDetailPrototypes[dindex].renderMode = DetailRenderMode.VertexLit;
-    //        }
-    //        else
-    //        {
-    //            newDetailPrototypes[dindex].usePrototypeMesh = false;
-    //            newDetailPrototypes[dindex].renderMode = DetailRenderMode.GrassBillboard;
-    //        }
-    //        dindex++;
-    //    }
-    //    terrainData.detailPrototypes = newDetailPrototypes;
-
-    //    float[,] heightMap = terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution);
-    //    for (int i = 0; i < terrainData.detailPrototypes.Length; i++)
-    //    {
-            
-    //        int[,] detailMap = new int[terrainData.detailWidth, terrainData.detailHeight];
-    //        for (int y = 0; y < terrainData.detailResolution; y += detailValues.details[i].inDetailSpacing)
-    //        {
-    //            for (int x = 0; x < terrainData.detailResolution; x += detailValues.details[i].inDetailSpacing)
-    //            {
-    //                if (UnityEngine.Random.Range(0.0f, 1.0f) > detailValues.details[i].density) continue;
-    //                int xHM = (int)(x / (float)terrainData.detailWidth * terrainData.heightmapResolution);
-    //                int yHM = (int)(y / (float)terrainData.detailHeight * terrainData.heightmapResolution);
-    //                float thisNoise = TerrainUtils.Map(Mathf.PerlinNoise(x * detailValues.details[i].feather,
-    //                    y * detailValues.details[i].feather), 0, 1, 0.5f, 1);
-    //                float thisHeightStart = detailValues.details[i].minHeight * thisNoise - detailValues.details[i].overlap * thisNoise;
-    //                float nextHeightStart = detailValues.details[i].maxHeight * thisNoise + detailValues.details[i].overlap * thisNoise;
-    //                float thisHeight = heightMap[yHM, xHM];
-    //                float steepness = terrainData.GetSteepness(xHM / (float)terrainData.heightmapResolution, yHM / (float)terrainData.heightmapResolution);
-    //                if ((thisHeight >= thisHeightStart && thisHeight <= nextHeightStart) &&
-    //                    (steepness >= detailValues.details[i].minSlope && steepness <= detailValues.details[i].maxSlope))
-    //                {
-    //                    detailMap[y, x] = 1;
-    //                }
-    //            }
-    //        }
-    //        terrainData.SetDetailLayer(0, 0, i, detailMap);
-    //    }           
-    //}
-
-    ////Ground Textures -------------------------------
-    //public void GroundTextures()
-    //{
-    //    if (!groundTextureValues) return;
-    //    TerrainLayer[] newSplatPrototype;
-    //    newSplatPrototype = new TerrainLayer[groundTextureValues.groundTextures.Count];
-    //    int spindex = 0;
-    //    foreach (SO_GroundTextures.GroundTexture sh in groundTextureValues.groundTextures)
-    //    {
-    //        newSplatPrototype[spindex] = new TerrainLayer();
-    //        newSplatPrototype[spindex].diffuseTexture = sh.texture;
-    //        newSplatPrototype[spindex].tileOffset = sh.tileOffset;
-    //        newSplatPrototype[spindex].tileSize = sh.tileSize;
-    //        newSplatPrototype[spindex].diffuseTexture.Apply(true);
-    //        string path = "Assets/TerrainAssets/Layers/Layer_" + spindex + ".terrainlayer";
-    //        AssetDatabase.CreateAsset(newSplatPrototype[spindex], path);
-    //        spindex++;
-    //        Selection.activeObject = this.gameObject;
-    //    }
-    //    terrainData.terrainLayers = newSplatPrototype;
-
-    //    float[,] heightMap = terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution);
-    //    float[,,] splatMapData = new float[terrainData.alphamapWidth, terrainData.alphamapHeight, terrainData.alphamapLayers];
-
-    //    for (int y = 0; y < terrainData.alphamapHeight; y++)
-    //    {
-    //        for (int x = 0; x < terrainData.alphamapWidth; x++)
-    //        {
-    //            float[] splat = new float[terrainData.alphamapLayers];
-    //            for (int i = 0; i < groundTextureValues.groundTextures.Count; i++)
-    //            {
-    //                float noise = Mathf.PerlinNoise(x * groundTextureValues.groundTextures[i].xNoise, y * groundTextureValues.groundTextures[i].yNoise)
-    //                    * groundTextureValues.groundTextures[i].noiseScale;
-    //                float offset = groundTextureValues.groundTextures[i].offset + noise;
-    //                float thisHeightStart = groundTextureValues.groundTextures[i].minHeight - offset;
-    //                float thisHeightStop = groundTextureValues.groundTextures[i].maxHeight + offset;
-    //                float steepness = terrainData.GetSteepness(y / (float)terrainData.alphamapHeight,
-    //                    x / (float)terrainData.alphamapWidth);
-    //                if (heightMap[x, y] >= thisHeightStart && heightMap[x, y] <= thisHeightStop &&
-    //                    steepness >= groundTextureValues.groundTextures[i].minSlope && steepness <= groundTextureValues.groundTextures[i].maxSlope)
-    //                {
-    //                    splat[i] = 1;
-    //                }
-    //            }
-    //            NormalizeVector(splat);
-    //            for (int j = 0; j < groundTextureValues.groundTextures.Count; j++)
-    //            {
-    //                splatMapData[x, y, j] = splat[j];
-    //            }
-    //        }
-    //    }
-    //    terrainData.SetAlphamaps(0, 0, splatMapData);
-    //}
-
-    //Water -----------------------------------------
-    public void AddWater()
-    {
-        GameObject water = GameObject.Find("water");
-        if (!water)
-        {
-            water = Instantiate(waterGameObject, this.transform.position, this.transform.rotation);
-            water.name = "water";
-        }
-        water.transform.position = this.transform.position + new Vector3(terrainData.size.x / 2,
-                                                                        waterHeight * terrainData.size.y,
-                                                                        terrainData.size.z / 2);
-        water.transform.localScale = new Vector3(terrainData.size.x / 2, 1, terrainData.size.z / 2);
-    }
-    public void DrawShoreLine()
-    {
-        float[,] heightMap = terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution);
-        for (int y = 0; y < terrainData.heightmapResolution; y++)
-        {
-            for (int x = 0; x < terrainData.heightmapResolution; x++)
-            {
-                Vector2 thisLocation = new Vector2(x, y);
-                List<Vector2> neighbours = GenerateNeighbours(thisLocation, terrainData.heightmapResolution, terrainData.heightmapResolution);
-                foreach (Vector2 n in neighbours)
-                {
-                    if (heightMap[x, y] < waterHeight && heightMap[(int)n.x, (int)n.y] > waterHeight)
-                    {
-                        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                        go.GetComponent<MeshRenderer>().material = shoreLineMaterial;
-                        go.transform.localScale *= shoreSize;
-
-                        go.transform.position = this.transform.position +
-                            new Vector3(y / (float)terrainData.heightmapResolution * terrainData.size.z,
-                                        waterHeight * terrainData.size.y,
-                                        x / (float)terrainData.heightmapResolution * terrainData.size.x);
-
-                        go.transform.LookAt(new Vector3(n.y / (float)terrainData.heightmapResolution * terrainData.size.z,
-                                                        waterHeight * terrainData.size.y,
-                                                        n.x / (float)terrainData.heightmapResolution * terrainData.size.x));
-                        go.transform.Rotate(90, 0, 0);
-                        go.tag = "Shore";
-                        go.layer = LayerMask.NameToLayer("Water");
-                    }
-                }
-            }
-        }
-
-        GameObject[] shoreQuads = GameObject.FindGameObjectsWithTag("Shore");
-        MeshFilter[] meshFilters = new MeshFilter[shoreQuads.Length];
-        for (int m = 0; m < shoreQuads.Length; m++)
-        {
-            meshFilters[m] = shoreQuads[m].GetComponent<MeshFilter>();
-        }
-        CombineInstance[] combine = new CombineInstance[meshFilters.Length];
-        int i = 0;
-        while (i < meshFilters.Length)
-        {
-            combine[i].mesh = meshFilters[i].sharedMesh;
-            combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
-            meshFilters[i].gameObject.SetActive(false);
-            i++;
-        }
-
-        GameObject currentShoreLine = GameObject.Find("ShoreLine");
-        if (currentShoreLine)
-        {
-            DestroyImmediate(currentShoreLine);
-        }
-        GameObject shoreLine = new GameObject();
-        shoreLine.name = "ShoreLine";
-        shoreLine.AddComponent<WaveAnimation>();
-        shoreLine.transform.position = this.transform.position;
-        shoreLine.transform.rotation = this.transform.rotation;
-        MeshFilter thisMF = shoreLine.AddComponent<MeshFilter>();
-        thisMF.mesh = new Mesh();
-        shoreLine.GetComponent<MeshFilter>().sharedMesh.CombineMeshes(combine);
-
-        MeshRenderer r = shoreLine.AddComponent<MeshRenderer>();
-        r.sharedMaterial = shoreLineMaterial;
-
-        for (int sQ = 0; sQ < shoreQuads.Length; sQ++)
-        {
-            DestroyImmediate(shoreQuads[sQ]);
         }
     }
 
@@ -515,11 +191,11 @@ public class GenerateDetails : MonoBehaviour
                 List<Vector2> neighbours = GenerateNeighbours(thisLocation, terrainData.heightmapResolution, terrainData.heightmapResolution);
                 foreach (Vector2 n in neighbours)
                 {
-                    if (heightMap[x, y] < waterHeight && heightMap[(int)n.x, (int)n.y] > waterHeight)
-                    {
-                        heightMap[x, y] = waterHeight;
-                        heightMap[(int)n.x, (int)n.y] -= waterHeight * erosionAmount;
-                    }
+                    //if (heightMap[x, y] < waterHeight && heightMap[(int)n.x, (int)n.y] > waterHeight)
+                    //{
+                    //    heightMap[x, y] = waterHeight;
+                    //    heightMap[(int)n.x, (int)n.y] -= waterHeight * erosionAmount;
+                    //}
                 }
             }
         }

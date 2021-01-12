@@ -41,6 +41,9 @@ public class GroundMovement : MonoBehaviour
 
     private void Inputs()
     {
+        if (isJumping)
+        { }
+
         // General Movement
         xMovement = Input.GetAxis("Horizontal");
         zMovement = Input.GetAxis("Vertical");

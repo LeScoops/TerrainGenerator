@@ -14,8 +14,6 @@ public class SO_Voronoi : BaseTerrainGeneration
 
     public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap)
     {
-        Debug.Log("Voronoi Values Test");
-
         for (int p = 0; p < vPeakCount; p++)
         {
             Vector3 peak = new Vector3(UnityEngine.Random.Range(0, terrainData.heightmapResolution),

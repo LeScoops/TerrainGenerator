@@ -12,8 +12,6 @@ public class SO_MPD : BaseTerrainGeneration
 
     public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap)
     {
-        Debug.Log("MPD Values Test");
-
         int width = terrainData.heightmapResolution - 1;
         int squareSize = width;
         float heightMin = mpdHeightMin;
