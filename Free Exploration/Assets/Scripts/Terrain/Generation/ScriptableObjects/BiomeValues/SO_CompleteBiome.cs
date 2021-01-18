@@ -8,7 +8,7 @@ public class SO_CompleteBiome : ScriptableObject
     public BaseTerrainGeneration baseTerrainGeneration;
     public SO_Smooth smooth;
     public SO_Water water;
-    public BaseDetailsGeneration baseDetailsGeneration;
+    public SO_CompleteDetails completeDetails;
 
     public void Generate(TerrainData terrainData, float[,] heightMap, GameObject givenGameObject, Transform givenTransform)
     {
@@ -24,9 +24,9 @@ public class SO_CompleteBiome : ScriptableObject
         {
             water.Generate(terrainData, givenTransform);
         }
-        if (baseDetailsGeneration)
+        if (completeDetails)
         {
-            baseDetailsGeneration.GenerateDetails(terrainData, givenGameObject, givenTransform);
+            completeDetails.GenerateDetails(terrainData, givenGameObject, givenTransform);
         }
     }
 }

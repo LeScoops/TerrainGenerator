@@ -11,7 +11,7 @@ public class GenerateDetails : MonoBehaviour
 
     [Header("Generate Detail Toggle")]
     [SerializeField] bool generateDetails = false;
-    [SerializeField] BaseDetailsGeneration baseDetails = null;
+    [SerializeField] SO_CompleteDetails baseDetails = null;
     [Header("TODO: Other things----")]
 
     public LayerMask givenLayerMask;

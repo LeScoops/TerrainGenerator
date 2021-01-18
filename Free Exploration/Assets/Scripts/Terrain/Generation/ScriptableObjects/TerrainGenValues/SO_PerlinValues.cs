@@ -24,4 +24,14 @@ public class SO_PerlinValues : BaseTerrainGeneration
         }
         terrainData.SetHeights(0, 0, heightMap);
     }
+
+    public void SetValues(float perlinXScale = 0.01f, float perlinYScale = 0.01f, int perlinOctaves = 3,
+        float perlinPersistance = 8, float perlinHeightScale = 0.09f)
+    {
+        this.perlinXScale = perlinXScale;
+        this.perlinYScale = perlinYScale;
+        this.perlinOctaves = perlinOctaves;
+        this.perlinPersistance = perlinPersistance;
+        this.perlinHeightScale = perlinHeightScale;
+    }
 }
