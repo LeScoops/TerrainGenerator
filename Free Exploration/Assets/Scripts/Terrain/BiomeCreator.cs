@@ -14,6 +14,7 @@ public class BiomeCreator : MonoBehaviour
     [Header("Terrain Generation")]
     [Header("----------")]
     [SerializeField] bool resetTerrain = true;
+
     [Header("Perlin Noise")]
     [SerializeField] bool testPerlin = false;
     [SerializeField] float perlinXScale = 0.01f;
@@ -21,8 +22,41 @@ public class BiomeCreator : MonoBehaviour
     [SerializeField] int perlinOctaves = 3;
     [SerializeField] float perlinPersistance = 8;
     [SerializeField] float perlinHeightScale = 0.09f;
+    [Range(0, 20)]
+    [SerializeField] int perlinSmoothIterations = 1;
     [SerializeField] bool createPerlinSO = false;
-    [SerializeField] string soName = "SO_PerlinValues_";
+    [SerializeField] string perlinSOName = "SO_PerlinValues_";
+
+    [Header("Voronoi")]
+    [SerializeField] bool testVoronoi = false;
+    [SerializeField] int vPeakCount = 3;
+    [SerializeField] float vFallOff = 0.2f;
+    [SerializeField] float vDropOff = 0.6f;
+    [SerializeField] float vMinHeight = 0.25f;
+    [SerializeField] float vMaxHeight = 0.4f;
+    [SerializeField] VoronoiType voronoiType = VoronoiType.Linear;
+    [Range(0, 20)]
+    [SerializeField] int vSmoothIterations = 1;
+    [SerializeField] bool createVoronoiSO = false;
+    [SerializeField] string voronoiSOName = "SO_VoronoiValues_";
+
+    [Header("Midpoint Displacement")]
+    [SerializeField] bool testMPD = false;
+    [SerializeField] float mpdHeightMin = -5;
+    [SerializeField] float mpdHeightMax = 5;
+    [SerializeField] int mpdHeightDampenerPower = 2;
+    [SerializeField] int mpdRoughness = 2;
+    [Range(0, 20)]
+    [SerializeField] int mpdSmoothIterations = 1;
+    [SerializeField] bool createMPDSO = false;
+    [SerializeField] string MPDSOName = "SO_MPDValues_";
+
+    [Header("Water")]
+    [SerializeField] bool testWater = false;
+    [SerializeField] GameObject waterGameObject = null;
+    [SerializeField] float waterHeight = 0.5f;
+    [SerializeField] bool createWaterSO = false;
+    [SerializeField] string waterSOName = "SO_Water_";
 
     private void Start()
     {
@@ -31,30 +65,96 @@ public class BiomeCreator : MonoBehaviour
 
     private void Update()
     {
-        // Perlin Noise
+        // Terrain Generators
+        Perlin();
+        Voronoi();
+        MPD();
+        Water();
+    }
+
+    #region Perlin Noise
+    void Perlin()
+    {
         if (testPerlin)
         {
             SO_PerlinValues perlinValues = (SO_PerlinValues)ScriptableObject.CreateInstance("SO_PerlinValues");
-            perlinValues.SetValues(perlinXScale, perlinYScale, perlinOctaves, perlinPersistance, perlinHeightScale);
+            perlinValues.SetValues(perlinXScale, perlinYScale, perlinOctaves, perlinPersistance, perlinHeightScale, perlinSmoothIterations);
             perlinValues.GenerateTerrain(terrainData, GetHeightMap());
             testPerlin = false;
         }
         if (createPerlinSO)
         {
-            GeneratePerlinSO(new SO_PerlinValues(), soName, perlinXScale, perlinYScale, perlinOctaves, perlinPersistance, perlinHeightScale);
+            SO_PerlinValues perlinValues = (SO_PerlinValues)ScriptableObject.CreateInstance("SO_PerlinValues");
+            perlinValues.SetValues(perlinXScale, perlinYScale, perlinOctaves, perlinPersistance, perlinHeightScale, perlinSmoothIterations);
+            AssetDatabase.CreateAsset(perlinValues, "Assets/Resources/ScriptableObjects/Perlin/" + perlinSOName + ".asset");
+            AssetDatabase.SaveAssets();
             createPerlinSO = false;
         }
     }
-
-
-    void GeneratePerlinSO(SO_PerlinValues perlinValues, string soName, float perlinXScale = 0.01f, float perlinYScale = 0.01f, int perlinOctaves = 3,
-    float perlinPersistance = 8, float perlinHeightScale = 0.09f)
+    #endregion
+    #region Voronoi
+    void Voronoi()
     {
-        //TODO Add values to asset before saving
-        AssetDatabase.CreateAsset(perlinValues, "Assets/Resources/ScriptableObjects/Perlin/" + /*perlinValues.name.Replace(" ", "")*/ soName + ".asset");
-        AssetDatabase.SaveAssets();
+        if (testVoronoi)
+        {
+            SO_Voronoi voronoiValues = (SO_Voronoi)ScriptableObject.CreateInstance("SO_Voronoi");
+            voronoiValues.SetValues(vPeakCount, vFallOff, vDropOff, vMinHeight, vMaxHeight, voronoiType, vSmoothIterations);
+            voronoiValues.GenerateTerrain(terrainData, GetHeightMap());
+            testVoronoi = false;
+        }
+        if (createVoronoiSO)
+        {
+            SO_Voronoi voronoiValues = (SO_Voronoi)ScriptableObject.CreateInstance("SO_Voronoi");
+            voronoiValues.SetValues(vPeakCount, vFallOff, vDropOff, vMinHeight, vMaxHeight, voronoiType, vSmoothIterations);
+            AssetDatabase.CreateAsset(voronoiValues, "Assets/Resources/ScriptableObjects/Voronoi/" + voronoiSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            createVoronoiSO = false;
+        }
     }
+    #endregion
+    #region MidpointDisplacement
+    void MPD()
+    {
+        if (testMPD)
+        {
+            SO_MPD mpdValues = (SO_MPD)ScriptableObject.CreateInstance("SO_MPD");
+            mpdValues.SetValues(mpdHeightMin, mpdHeightMax, mpdHeightDampenerPower, mpdRoughness, mpdSmoothIterations);
+            mpdValues.GenerateTerrain(terrainData, GetHeightMap());
+            testMPD = false;
+        }
+        if (createMPDSO)
+        {
+            SO_MPD mpdValues = (SO_MPD)ScriptableObject.CreateInstance("SO_MPD");
+            mpdValues.SetValues(mpdHeightMin, mpdHeightMax, mpdHeightDampenerPower, mpdRoughness, mpdSmoothIterations);
+            AssetDatabase.CreateAsset(mpdValues, "Assets/Resources/ScriptableObjects/MidpointDisplacement/" + MPDSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            createMPDSO = false;
+        }
+    }
+    #endregion
+    #region Water
+    void Water()
+    {
+        if (testWater)
+        {
+            SO_Water waterValues = (SO_Water)ScriptableObject.CreateInstance("SO_Water");
+            waterValues.SetValues(waterGameObject, waterHeight);
+            waterValues.Generate(terrainData, this.transform);
+            testWater = false;
+        }
+        if (createWaterSO)
+        {
+            SO_Water waterValues = (SO_Water)ScriptableObject.CreateInstance("SO_Water");
+            waterValues.SetValues(waterGameObject, waterHeight);
+            AssetDatabase.CreateAsset(waterValues, "Assets/Resources/ScriptableObjects/Water/" + waterSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            createWaterSO = false;
+        }
+    }
+    #endregion
 
+
+    #region Utility
     float[,] GetHeightMap()
     {
         if (!resetTerrain)
@@ -66,4 +166,5 @@ public class BiomeCreator : MonoBehaviour
             return new float[terrainData.heightmapResolution, terrainData.heightmapResolution];
         }
     }
+    #endregion
 }

@@ -6,11 +6,13 @@ using UnityEngine;
 public class SO_Water : ScriptableObject
 {
     [Header("Water")]
-    public float waterHeight = 0.5f;
     public GameObject waterGameObject;
-    [Header("Shoreline")]
-    public Material shoreLineMaterial;
-    public float shoreSize = 10.0f;
+    public float waterHeight = 0.5f;
+
+    //TODO AddShoreline
+    //[Header("Shoreline")]
+    /*public*/ Material shoreLineMaterial = null;
+    /*public*/ float shoreSize = 10.0f;
 
     public void Generate(TerrainData terrainData, Transform transform)
     {
@@ -105,6 +107,12 @@ public class SO_Water : ScriptableObject
         {
             DestroyImmediate(shoreQuads[sQ]);
         }
+    }
+
+    public void SetValues(GameObject waterGameObject = null, float waterHeight = 0.5f)
+    {
+        this.waterGameObject = waterGameObject;
+        this.waterHeight = waterHeight;
     }
 
     List<Vector2> GenerateNeighbours(Vector2 pos, int width, int height)

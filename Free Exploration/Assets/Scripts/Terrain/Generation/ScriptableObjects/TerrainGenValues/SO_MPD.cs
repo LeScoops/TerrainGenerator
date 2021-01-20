@@ -5,18 +5,19 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "so_MPD", menuName = "Scriptable Objects/Values/MidpointDisplacement")]
 public class SO_MPD : BaseTerrainGeneration
 {
-    public int mpdHeightMin = -5;
-    public int mpdHeightMax = 5;
-    public int mpdHeightDampenerPower = 2;
-    public int mpdRoughness = 2;
+    public float heightMin = -5;
+    public float heightMax = 5;
+    public int heightDampenerPower = 2;
+    public int roughness = 2;
+    public int smoothIterations = 1;
 
     public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap)
     {
         int width = terrainData.heightmapResolution - 1;
         int squareSize = width;
-        float heightMin = mpdHeightMin;
-        float heightMax = mpdHeightMax;
-        float heightDampener = (float)Mathf.Pow(mpdHeightDampenerPower, -1 * mpdRoughness);
+        //float heightMin = this.heightMin;
+        //float heightMax = this.heightMax;
+        float heightDampener = (float)Mathf.Pow(heightDampenerPower, -1 * roughness);
 
         int cornerX, cornerY;
         int midX, midY;
@@ -83,7 +84,17 @@ public class SO_MPD : BaseTerrainGeneration
             heightMin *= heightDampener;
             heightMax *= heightDampener;
         }
+        Smooth(terrainData, smoothIterations);
 
         terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void SetValues(float mpdHeightMin = -5, float mpdHeightMax = 5, int mpdHeightDampenerPower = 2, int mpdRoughness = 2, int mpdSmoothIterations = 1)
+    {
+        heightMin = mpdHeightMin;
+        heightMax = mpdHeightMax;
+        heightDampenerPower = mpdHeightDampenerPower;
+        roughness = mpdRoughness;
+        smoothIterations = mpdSmoothIterations;
     }
 }

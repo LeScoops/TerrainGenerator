@@ -11,6 +11,7 @@ public class SO_Voronoi : BaseTerrainGeneration
     public float vMinHeight = 0.25f;
     public float vMaxHeight = 0.4f;
     public VoronoiType voronoiType = VoronoiType.Linear;
+    public int smoothIterations = 1;
 
     public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap)
     {
@@ -66,6 +67,19 @@ public class SO_Voronoi : BaseTerrainGeneration
                 }
             }
         }
+        Smooth(terrainData, smoothIterations);
         terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void SetValues(int vPeakCount = 3, float vFallOff = 0.2f, float vDropOff = 0.6f, float vMinHeight = 0.25f,
+        float vMaxHeight = 0.4f, VoronoiType voronoiType = VoronoiType.Linear, int smoothIterations = 1)
+    {
+        this.vPeakCount = vPeakCount;
+        this.vFallOff = vFallOff;
+        this.vDropOff = vDropOff;
+        this.vMinHeight = vMinHeight;
+        this.vMaxHeight = vMaxHeight;
+        this.voronoiType = voronoiType;
+        this.smoothIterations = smoothIterations;
     }
 }

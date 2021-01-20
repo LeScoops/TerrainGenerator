@@ -10,6 +10,7 @@ public class SO_PerlinValues : BaseTerrainGeneration
     public int perlinOctaves = 3;
     public float perlinPersistance = 8;
     public float perlinHeightScale = 0.09f;
+    public int smoothIterations = 1;
 
     public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap)
     {
@@ -22,16 +23,18 @@ public class SO_PerlinValues : BaseTerrainGeneration
                     perlinPersistance) * perlinHeightScale;
             }
         }
+        Smooth(terrainData, smoothIterations);
         terrainData.SetHeights(0, 0, heightMap);
     }
 
     public void SetValues(float perlinXScale = 0.01f, float perlinYScale = 0.01f, int perlinOctaves = 3,
-        float perlinPersistance = 8, float perlinHeightScale = 0.09f)
+        float perlinPersistance = 8, float perlinHeightScale = 0.09f, int smoothIterations = 1)
     {
         this.perlinXScale = perlinXScale;
         this.perlinYScale = perlinYScale;
         this.perlinOctaves = perlinOctaves;
         this.perlinPersistance = perlinPersistance;
         this.perlinHeightScale = perlinHeightScale;
+        this.smoothIterations = smoothIterations;
     }
 }
