@@ -6,7 +6,7 @@ using UnityEngine;
 public class SO_Trees : ScriptableObject
 {
     [System.Serializable]
-    public class Vegetation
+    public class Trees
     {
         public GameObject mesh;
         public float minHeight = 0.1f;
@@ -21,9 +21,9 @@ public class SO_Trees : ScriptableObject
         public Color lightColour = Color.white;
         public int numberOfTrees = 100;
     }
-    public List<Vegetation> vegetation = new List<Vegetation>()
+    public List<Trees> trees = new List<Trees>()
     {
-        new Vegetation()
+        new Trees()
     };
     public DetailGenerationTypes generationType = DetailGenerationTypes.Grid;
     public int maximumTrees = 1000;
@@ -33,9 +33,9 @@ public class SO_Trees : ScriptableObject
     public void Generate(TerrainData terrainData, Transform transform)
     {
         TreePrototype[] newTreePrototypes;
-        newTreePrototypes = new TreePrototype[vegetation.Count];
+        newTreePrototypes = new TreePrototype[trees.Count];
         int tindex = 0;
-        foreach (SO_Trees.Vegetation t in vegetation)
+        foreach (SO_Trees.Trees t in trees)
         {
             newTreePrototypes[tindex] = new TreePrototype();
             newTreePrototypes[tindex].prefab = t.mesh;
@@ -54,19 +54,19 @@ public class SO_Trees : ScriptableObject
                     for (int tp = 0; tp < terrainData.treePrototypes.Length; tp++)
                     {
                         float thisHeight = terrainData.GetHeight(x, z) / terrainData.size.y;
-                        float thisHeightStart = vegetation[tp].minHeight;
-                        float thisHeightEnd = vegetation[tp].maxHeight;
+                        float thisHeightStart = trees[tp].minHeight;
+                        float thisHeightEnd = trees[tp].maxHeight;
 
                         float steepness = terrainData.GetSteepness(x / terrainData.size.x, z / terrainData.size.z);
 
                         if ((thisHeight >= thisHeightStart && thisHeight <= thisHeightEnd) &&
-                            steepness >= vegetation[tp].minSlope && steepness <= vegetation[tp].maxSlope)
+                            steepness >= trees[tp].minSlope && steepness <= trees[tp].maxSlope)
                         {
                             TreeInstance instance = new TreeInstance();
                             instance.position = new Vector3(
-                                (x + Random.Range(-vegetation[tp].scattering, vegetation[tp].scattering)) / terrainData.size.x,
+                                (x + Random.Range(-trees[tp].scattering, trees[tp].scattering)) / terrainData.size.x,
                                 terrainData.GetHeight(x, z) / terrainData.size.y,
-                                (z + Random.Range(-vegetation[tp].scattering, vegetation[tp].scattering)) / terrainData.size.z);
+                                (z + Random.Range(-trees[tp].scattering, trees[tp].scattering)) / terrainData.size.z);
 
                             Vector3 treeWorldPos = new Vector3(instance.position.x * terrainData.size.x,
                                 instance.position.y * terrainData.size.y,
@@ -81,9 +81,9 @@ public class SO_Trees : ScriptableObject
                                 instance.position = new Vector3(instance.position.x, treeHeight, instance.position.z);
                                 instance.rotation = Random.Range(0, 360);
                                 instance.prototypeIndex = tp;
-                                instance.color = Color.Lerp(vegetation[tp].colour1, vegetation[tp].colour2, Random.Range(0.0f, 1.0f));
-                                instance.lightmapColor = vegetation[tp].lightColour;
-                                float scale = Random.Range(vegetation[tp].minScale, vegetation[tp].maxScale);
+                                instance.color = Color.Lerp(trees[tp].colour1, trees[tp].colour2, Random.Range(0.0f, 1.0f));
+                                instance.lightmapColor = trees[tp].lightColour;
+                                float scale = Random.Range(trees[tp].minScale, trees[tp].maxScale);
                                 instance.heightScale = scale;
                                 instance.widthScale = scale;
                                 allVegetation.Add(instance);
@@ -102,14 +102,14 @@ public class SO_Trees : ScriptableObject
             for (int tp = 0; tp < terrainData.treePrototypes.Length; tp++)
             {
                 int treesSpawned = 0;
-                while (treesSpawned < vegetation[tp].numberOfTrees)
+                while (treesSpawned < trees[tp].numberOfTrees)
                 {
                     TreeInstance instance = new TreeInstance();
                     int x = Random.Range(0, (int)terrainData.size.x);
                     int z = Random.Range(0, (int)terrainData.size.z);
 
-                    if (terrainData.GetHeight(x, z) / terrainData.size.y < vegetation[tp].minHeight ||
-                        terrainData.GetHeight(x, z) / terrainData.size.y > vegetation[tp].maxHeight)
+                    if (terrainData.GetHeight(x, z) / terrainData.size.y < trees[tp].minHeight ||
+                        terrainData.GetHeight(x, z) / terrainData.size.y > trees[tp].maxHeight)
                     {
                         continue;
                     }
@@ -122,14 +122,14 @@ public class SO_Trees : ScriptableObject
                     if (targetX > 1f || targetZ > 1f) { continue; }
 
                     float steepness = terrainData.GetSteepness(targetX, targetZ);
-                    if (steepness <= vegetation[tp].minSlope - 0.1f || steepness >= vegetation[tp].maxSlope) { continue; }
+                    if (steepness <= trees[tp].minSlope - 0.1f || steepness >= trees[tp].maxSlope) { continue; }
 
                     instance.position = new Vector3(targetX, instance.position.y, targetZ);
                     instance.rotation = Random.Range(0, 360);
                     instance.prototypeIndex = tp;
-                    instance.color = Color.Lerp(vegetation[tp].colour1, vegetation[tp].colour2, Random.Range(0.0f, 1.0f));
-                    instance.lightmapColor = vegetation[tp].lightColour;
-                    float scale = Random.Range(vegetation[tp].minScale, vegetation[tp].maxScale);
+                    instance.color = Color.Lerp(trees[tp].colour1, trees[tp].colour2, Random.Range(0.0f, 1.0f));
+                    instance.lightmapColor = trees[tp].lightColour;
+                    float scale = Random.Range(trees[tp].minScale, trees[tp].maxScale);
                     instance.heightScale = scale;
                     instance.widthScale = scale;
                     allVegetation.Add(instance);
@@ -138,5 +138,10 @@ public class SO_Trees : ScriptableObject
             }
             terrainData.treeInstances = allVegetation.ToArray();
         }
+    }
+
+    public void SetValues(List<Trees> trees)
+    {
+        this.trees = trees;
     }
 }

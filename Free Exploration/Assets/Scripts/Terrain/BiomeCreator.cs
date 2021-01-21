@@ -10,6 +10,7 @@ public class BiomeCreator : MonoBehaviour
     private TerrainData terrainData;
     private float[,] heightMap;
 
+    #region Terrain Generation Values
     [Header("----------")]
     [Header("Terrain Generation")]
     [Header("----------")]
@@ -25,7 +26,7 @@ public class BiomeCreator : MonoBehaviour
     [Range(0, 20)]
     [SerializeField] int perlinSmoothIterations = 1;
     [SerializeField] bool createPerlinSO = false;
-    [SerializeField] string perlinSOName = "SO_PerlinValues_";
+    [SerializeField] string perlinSOName = "Default";
 
     [Header("Voronoi")]
     [SerializeField] bool testVoronoi = false;
@@ -38,7 +39,7 @@ public class BiomeCreator : MonoBehaviour
     [Range(0, 20)]
     [SerializeField] int vSmoothIterations = 1;
     [SerializeField] bool createVoronoiSO = false;
-    [SerializeField] string voronoiSOName = "SO_VoronoiValues_";
+    [SerializeField] string voronoiSOName = "Default";
 
     [Header("Midpoint Displacement")]
     [SerializeField] bool testMPD = false;
@@ -49,14 +50,41 @@ public class BiomeCreator : MonoBehaviour
     [Range(0, 20)]
     [SerializeField] int mpdSmoothIterations = 1;
     [SerializeField] bool createMPDSO = false;
-    [SerializeField] string MPDSOName = "SO_MPDValues_";
+    [SerializeField] string MPDSOName = "Default";
 
     [Header("Water")]
     [SerializeField] bool testWater = false;
     [SerializeField] GameObject waterGameObject = null;
     [SerializeField] float waterHeight = 0.5f;
     [SerializeField] bool createWaterSO = false;
-    [SerializeField] string waterSOName = "SO_Water_";
+    [SerializeField] string waterSOName = "Default";
+    #endregion
+    #region Detail Generation Values
+    [Header("----------")]
+    [Header("Details Generation")]
+    [Header("----------")]
+    [Header("Details")]
+    [SerializeField] bool testDetails = false;
+    [SerializeField] List<SO_Details.Detail> details = new List<SO_Details.Detail>()
+    {
+        new SO_Details.Detail()
+    };
+    [SerializeField] bool createDetailsSO = false;
+    [SerializeField] string detailsSOName = "Default";
+
+    [Header("Trees")]
+    [SerializeField] bool testTrees = false;
+    [SerializeField] List<SO_Trees.Trees> trees = new List<SO_Trees.Trees>()
+    {
+        new SO_Trees.Trees()
+    };
+    [SerializeField] DetailGenerationTypes generationType = DetailGenerationTypes.Grid;
+    [SerializeField] int maximumTrees = 1000;
+    [SerializeField] int treeSpacing = 5;
+    [SerializeField] int terrainLayer = 8;
+    [SerializeField] bool createTreesSO = false;
+    [SerializeField] string treesSOName = "Default";
+    #endregion
 
     private void Start()
     {
@@ -70,6 +98,8 @@ public class BiomeCreator : MonoBehaviour
         Voronoi();
         MPD();
         Water();
+        Details();
+        Trees();
     }
 
     #region Perlin Noise
@@ -86,7 +116,7 @@ public class BiomeCreator : MonoBehaviour
         {
             SO_PerlinValues perlinValues = (SO_PerlinValues)ScriptableObject.CreateInstance("SO_PerlinValues");
             perlinValues.SetValues(perlinXScale, perlinYScale, perlinOctaves, perlinPersistance, perlinHeightScale, perlinSmoothIterations);
-            AssetDatabase.CreateAsset(perlinValues, "Assets/Resources/ScriptableObjects/Perlin/" + perlinSOName + ".asset");
+            AssetDatabase.CreateAsset(perlinValues, "Assets/Resources/ScriptableObjects/Perlin/SO_Perlin_" + perlinSOName + ".asset");
             AssetDatabase.SaveAssets();
             createPerlinSO = false;
         }
@@ -106,7 +136,7 @@ public class BiomeCreator : MonoBehaviour
         {
             SO_Voronoi voronoiValues = (SO_Voronoi)ScriptableObject.CreateInstance("SO_Voronoi");
             voronoiValues.SetValues(vPeakCount, vFallOff, vDropOff, vMinHeight, vMaxHeight, voronoiType, vSmoothIterations);
-            AssetDatabase.CreateAsset(voronoiValues, "Assets/Resources/ScriptableObjects/Voronoi/" + voronoiSOName + ".asset");
+            AssetDatabase.CreateAsset(voronoiValues, "Assets/Resources/ScriptableObjects/Voronoi/SO_Voronoi_" + voronoiSOName + ".asset");
             AssetDatabase.SaveAssets();
             createVoronoiSO = false;
         }
@@ -126,7 +156,7 @@ public class BiomeCreator : MonoBehaviour
         {
             SO_MPD mpdValues = (SO_MPD)ScriptableObject.CreateInstance("SO_MPD");
             mpdValues.SetValues(mpdHeightMin, mpdHeightMax, mpdHeightDampenerPower, mpdRoughness, mpdSmoothIterations);
-            AssetDatabase.CreateAsset(mpdValues, "Assets/Resources/ScriptableObjects/MidpointDisplacement/" + MPDSOName + ".asset");
+            AssetDatabase.CreateAsset(mpdValues, "Assets/Resources/ScriptableObjects/MidpointDisplacement/SO_MPD_" + MPDSOName + ".asset");
             AssetDatabase.SaveAssets();
             createMPDSO = false;
         }
@@ -146,9 +176,49 @@ public class BiomeCreator : MonoBehaviour
         {
             SO_Water waterValues = (SO_Water)ScriptableObject.CreateInstance("SO_Water");
             waterValues.SetValues(waterGameObject, waterHeight);
-            AssetDatabase.CreateAsset(waterValues, "Assets/Resources/ScriptableObjects/Water/" + waterSOName + ".asset");
+            AssetDatabase.CreateAsset(waterValues, "Assets/Resources/ScriptableObjects/Water/SO_Water_" + waterSOName + ".asset");
             AssetDatabase.SaveAssets();
             createWaterSO = false;
+        }
+    }
+    #endregion
+    #region Details
+    void Details()
+    {
+        if (testDetails)
+        {
+            SO_Details detailValues = (SO_Details)ScriptableObject.CreateInstance("SO_Details");
+            detailValues.SetValues(details);
+            detailValues.Generate(terrainData);
+            testDetails = false;
+        }
+        if (createDetailsSO)
+        {
+            SO_Details detailValues = (SO_Details)ScriptableObject.CreateInstance("SO_Details");
+            detailValues.SetValues(details);
+            AssetDatabase.CreateAsset(detailValues, "Assets/Resources/ScriptableObjects/Details/SO_Details_" + detailsSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            createDetailsSO = false;
+        }
+    }
+    #endregion
+    #region Trees
+    void Trees()
+    {
+        if (testTrees)
+        {
+            SO_Trees treeValues = (SO_Trees)ScriptableObject.CreateInstance("SO_Trees");
+            treeValues.SetValues(trees);
+            treeValues.Generate(terrainData, this.transform);
+            testTrees = false;
+        }
+        if (createTreesSO)
+        {
+            SO_Trees treeValues = (SO_Trees)ScriptableObject.CreateInstance("SO_Trees");
+            treeValues.SetValues(trees);
+            AssetDatabase.CreateAsset(treeValues, "Assets/Resources/ScriptableObjects/Trees/SO_Trees_" + treesSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            createTreesSO = false;
         }
     }
     #endregion

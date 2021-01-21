@@ -35,7 +35,7 @@ public class SO_Details : ScriptableObject
         DetailPrototype[] newDetailPrototypes;
         newDetailPrototypes = new DetailPrototype[details.Count];
         int dindex = 0;
-        foreach (SO_Details.Detail d in details)
+        foreach (Detail d in details)
         {
             newDetailPrototypes[dindex] = new DetailPrototype();
             newDetailPrototypes[dindex].prototype = d.prototype;
@@ -88,5 +88,10 @@ public class SO_Details : ScriptableObject
             }
             terrainData.SetDetailLayer(0, 0, i, detailMap);
         }
+    }
+
+    public void SetValues(List<Detail> details)
+    {
+        this.details = details;
     }
 }

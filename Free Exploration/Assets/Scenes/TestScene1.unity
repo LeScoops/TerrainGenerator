@@ -673,9 +673,9 @@ MonoBehaviour:
   perlinOctaves: 3
   perlinPersistance: 8
   perlinHeightScale: 0.09
-  perlinSmoothIterations: 5
+  perlinSmoothIterations: 0
   createPerlinSO: 0
-  perlinSOName: SO_PerlinValues_
+  perlinSOName: Default
   testVoronoi: 0
   vPeakCount: 6
   vFallOff: 0.2
@@ -685,7 +685,7 @@ MonoBehaviour:
   voronoiType: 0
   vSmoothIterations: 1
   createVoronoiSO: 0
-  voronoiSOName: SO_VoronoiValues_
+  voronoiSOName: Default
   testMPD: 0
   mpdHeightMin: -6
   mpdHeightMax: 5
@@ -693,12 +693,66 @@ MonoBehaviour:
   mpdRoughness: 3
   mpdSmoothIterations: 1
   createMPDSO: 0
-  MPDSOName: SO_MPDValues_
+  MPDSOName: Default
   testWater: 0
   waterGameObject: {fileID: 100000, guid: 9485b0c79d11e2e4d0007da98d76c639, type: 3}
   waterHeight: 0.04
   createWaterSO: 0
-  waterSOName: SO_Water_
+  waterSOName: Default
+  testDetails: 0
+  details:
+  - prototype: {fileID: 0}
+    prototypeTexture: {fileID: 2800000, guid: 39caea544382b0341be6de6e97b8114d, type: 3}
+    minHeight: 0
+    maxHeight: 1
+    minSlope: 0
+    maxSlope: 90
+    dryColour: {r: 0.9827944, g: 1, b: 0, a: 1}
+    healthyColour: {r: 0.017205596, g: 1, b: 0, a: 1}
+    heightRange: {x: 1, y: 1}
+    widthRange: {x: 1, y: 1}
+    noiseSpread: 0.5
+    overlap: 0.01
+    feather: 0.5
+    density: 0.5
+    inDetailSpacing: 1
+  - prototype: {fileID: 6573723043079136192, guid: ed18eacbf5bb4514d8a6b7a36c669520, type: 3}
+    prototypeTexture: {fileID: 0}
+    minHeight: 0
+    maxHeight: 1
+    minSlope: 0
+    maxSlope: 90
+    dryColour: {r: 1, g: 1, b: 1, a: 1}
+    healthyColour: {r: 1, g: 1, b: 1, a: 1}
+    heightRange: {x: 0.5, y: 10}
+    widthRange: {x: 1, y: 1}
+    noiseSpread: 0.5
+    overlap: 0.01
+    feather: 0.5
+    density: 0.01
+    inDetailSpacing: 1
+  createDetailsSO: 0
+  detailsSOName: Default
+  testTrees: 0
+  trees:
+  - mesh: {fileID: 100000, guid: c91c1eb85782d5748ace27eb4d7415bb, type: 3}
+    minHeight: 0.1
+    maxHeight: 0.2
+    scattering: 5
+    minSlope: 0
+    maxSlope: 90
+    minScale: 0.5
+    maxScale: 1
+    colour1: {r: 1, g: 1, b: 1, a: 1}
+    colour2: {r: 1, g: 1, b: 1, a: 1}
+    lightColour: {r: 1, g: 1, b: 1, a: 1}
+    numberOfTrees: 1000
+  generationType: 1
+  maximumTrees: 1000
+  treeSpacing: 5
+  terrainLayer: 8
+  createTreesSO: 0
+  treesSOName: Default
 --- !u!154 &1889872334
 TerrainCollider:
   m_ObjectHideFlags: 0
