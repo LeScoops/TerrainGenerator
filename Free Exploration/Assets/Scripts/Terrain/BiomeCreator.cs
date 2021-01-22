@@ -208,14 +208,14 @@ public class BiomeCreator : MonoBehaviour
         if (testTrees)
         {
             SO_Trees treeValues = (SO_Trees)ScriptableObject.CreateInstance("SO_Trees");
-            treeValues.SetValues(trees);
+            treeValues.SetValues(trees, generationType, maximumTrees, treeSpacing, terrainLayer);
             treeValues.Generate(terrainData, this.transform);
             testTrees = false;
         }
         if (createTreesSO)
         {
             SO_Trees treeValues = (SO_Trees)ScriptableObject.CreateInstance("SO_Trees");
-            treeValues.SetValues(trees);
+            treeValues.SetValues(trees, generationType, maximumTrees, treeSpacing, terrainLayer);
             AssetDatabase.CreateAsset(treeValues, "Assets/Resources/ScriptableObjects/Trees/SO_Trees_" + treesSOName + ".asset");
             AssetDatabase.SaveAssets();
             createTreesSO = false;

@@ -140,8 +140,13 @@ public class SO_Trees : ScriptableObject
         }
     }
 
-    public void SetValues(List<Trees> trees)
+    public void SetValues(List<Trees> trees, DetailGenerationTypes generationType = DetailGenerationTypes.Random, int maximumTrees = 1000,
+        int treeSpacing = 5, int terrainLayer = 8)
     {
         this.trees = trees;
+        this.generationType = generationType;
+        this.maximumTrees = maximumTrees;
+        this.treeSpacing = treeSpacing;
+        this.terrainLayer = terrainLayer;
     }
 }
