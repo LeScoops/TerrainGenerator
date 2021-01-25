@@ -9,6 +9,7 @@ public class BiomeCreator : MonoBehaviour
 {
     private TerrainData terrainData;
     private float[,] heightMap;
+    private List<BaseDetailsGeneration> listOfDetailValues;
 
     #region Terrain Generation Values
     [Header("----------")]
@@ -63,7 +64,6 @@ public class BiomeCreator : MonoBehaviour
     [Header("----------")]
     [Header("Details Generation")]
     [Header("----------")]
-    [Header("Details")]
     [SerializeField] bool testDetails = false;
     [SerializeField] List<SO_Details.Detail> details = new List<SO_Details.Detail>()
     {
@@ -84,11 +84,34 @@ public class BiomeCreator : MonoBehaviour
     [SerializeField] int terrainLayer = 8;
     [SerializeField] bool createTreesSO = false;
     [SerializeField] string treesSOName = "Default";
+
+    [Header("Ground Textures")]
+    [SerializeField] bool testGroundTextures = false;
+    [SerializeField] List<SO_GroundTextures.GroundTexture> groundTextures = new List<SO_GroundTextures.GroundTexture>()
+    {
+        new SO_GroundTextures.GroundTexture()
+    };
+    [SerializeField] bool createGroundTextureSO = false;
+    [SerializeField] string groundTextureSOName = "Default";
     #endregion
+    [Header("----------")]
+    [Header("Biome Generation")]
+    [Header("----------")]
+    [SerializeField] bool testBiome = false;
+    [SerializeField] bool addPerlin = false;
+    [SerializeField] bool addMPD = false;
+    [SerializeField] bool addVoronoi = false;
+    [SerializeField] bool addWater = false;
+    [SerializeField] bool addTrees = false;
+    [SerializeField] bool addDetail = false;
+    [SerializeField] bool addTextures = false;
+    [SerializeField] bool createBiomeSO = false;
+    [SerializeField] string biomeSOName = "Default";
 
     private void Start()
     {
         terrainData = GetComponent<Terrain>().terrainData;
+        listOfDetailValues = new List<BaseDetailsGeneration>();
     }
 
     private void Update()
@@ -98,8 +121,14 @@ public class BiomeCreator : MonoBehaviour
         Voronoi();
         MPD();
         Water();
+
+        // Detail Generators
         Details();
         Trees();
+        GroundTextures();
+
+        // Biome Generator
+        Biome();
     }
 
     #region Perlin Noise
@@ -189,7 +218,7 @@ public class BiomeCreator : MonoBehaviour
         {
             SO_Details detailValues = (SO_Details)ScriptableObject.CreateInstance("SO_Details");
             detailValues.SetValues(details);
-            detailValues.Generate(terrainData);
+            detailValues.Generate(terrainData, this.transform);
             testDetails = false;
         }
         if (createDetailsSO)
@@ -219,6 +248,154 @@ public class BiomeCreator : MonoBehaviour
             AssetDatabase.CreateAsset(treeValues, "Assets/Resources/ScriptableObjects/Trees/SO_Trees_" + treesSOName + ".asset");
             AssetDatabase.SaveAssets();
             createTreesSO = false;
+        }
+    }
+    #endregion
+    #region Ground Textures
+    void GroundTextures()
+    {
+        if (testGroundTextures)
+        {
+            SO_GroundTextures groundTextureValues = (SO_GroundTextures)ScriptableObject.CreateInstance("SO_GroundTextures");
+            groundTextureValues.SetValues(groundTextures);
+            groundTextureValues.Generate(terrainData, this.transform);
+            testGroundTextures = false;
+        }
+        if (createGroundTextureSO)
+        {
+            SO_GroundTextures groundTextureValues = (SO_GroundTextures)ScriptableObject.CreateInstance("SO_GroundTextures");
+            groundTextureValues.SetValues(groundTextures);
+            AssetDatabase.CreateAsset(groundTextureValues, "Assets/Resources/ScriptableObjects/GroundTextures/SO_GroundTextures_"
+                + groundTextureSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            createGroundTextureSO = false;
+        }
+    }
+    #endregion
+    #region Biome
+    void Biome()
+    {
+        if (testBiome)
+        {
+            SO_Biome biomeValues = (SO_Biome)ScriptableObject.CreateInstance("SO_Biome");
+            BiomeTerrainValues(biomeValues);
+            BiomeDetailValues(biomeValues);
+
+            biomeValues.Generate(terrainData, GetHeightMap(), this.transform);
+            DeleteBiomeAssets();
+            testBiome = false;
+        }
+
+        if (createBiomeSO)
+        {
+            SO_Biome biomeValues = (SO_Biome)ScriptableObject.CreateInstance("SO_Biome");
+            BiomeTerrainValues(biomeValues);
+            BiomeDetailValues(biomeValues);
+            AssetDatabase.CreateAsset(biomeValues, "Assets/Resources/ScriptableObjects/Biomes/SO_Biome_"
+                + biomeSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            createBiomeSO = false;
+        }
+    }
+
+    private void BiomeDetailValues(SO_Biome biomeValues)
+    {
+        listOfDetailValues.Clear();
+        if (addWater)
+        {
+            SO_Water waterValues = (SO_Water)ScriptableObject.CreateInstance("SO_Water");
+            waterValues.SetValues(waterGameObject, waterHeight);
+            AssetDatabase.CreateAsset(waterValues, "Assets/Resources/ScriptableObjects/Water/SO_Water_" + biomeSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            listOfDetailValues.Add(waterValues);
+        }
+        if (addDetail)
+        {
+            SO_Details detailValues = (SO_Details)ScriptableObject.CreateInstance("SO_Details");
+            detailValues.SetValues(details);
+            AssetDatabase.CreateAsset(detailValues, "Assets/Resources/ScriptableObjects/Details/SO_Details_" + biomeSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            listOfDetailValues.Add(detailValues);
+        }
+        if (addTrees)
+        {
+            SO_Trees treeValues = (SO_Trees)ScriptableObject.CreateInstance("SO_Trees");
+            treeValues.SetValues(trees, generationType, maximumTrees, treeSpacing, terrainLayer);
+            AssetDatabase.CreateAsset(treeValues, "Assets/Resources/ScriptableObjects/Trees/SO_Trees_" + biomeSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            listOfDetailValues.Add(treeValues);
+        }
+        if (addTextures)
+        {
+            SO_GroundTextures groundTextureValues = (SO_GroundTextures)ScriptableObject.CreateInstance("SO_GroundTextures");
+            groundTextureValues.SetValues(groundTextures);
+            AssetDatabase.CreateAsset(groundTextureValues, "Assets/Resources/ScriptableObjects/GroundTextures/SO_GroundTextures_"
+                + biomeSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            listOfDetailValues.Add(groundTextureValues);
+        }
+        biomeValues.SetDetailsGenerationList(listOfDetailValues);
+    }
+
+    private void BiomeTerrainValues(SO_Biome biomeValues)
+    {
+        if (addPerlin)
+        {
+            SO_PerlinValues perlinValues = (SO_PerlinValues)ScriptableObject.CreateInstance("SO_PerlinValues");
+            perlinValues.SetValues(perlinXScale, perlinYScale, perlinOctaves, perlinPersistance, perlinHeightScale, perlinSmoothIterations);
+            AssetDatabase.CreateAsset(perlinValues, "Assets/Resources/ScriptableObjects/Perlin/SO_Perlin_" + biomeSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            biomeValues.SetBaseTerrain(perlinValues);
+        }
+        else if (addVoronoi)
+        {
+            SO_Voronoi voronoiValues = (SO_Voronoi)ScriptableObject.CreateInstance("SO_Voronoi");
+            voronoiValues.SetValues(vPeakCount, vFallOff, vDropOff, vMinHeight, vMaxHeight, voronoiType, vSmoothIterations);
+            AssetDatabase.CreateAsset(voronoiValues, "Assets/Resources/ScriptableObjects/Voronoi/SO_Voronoi_" + biomeSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            biomeValues.SetBaseTerrain(voronoiValues);
+        }
+        else if (addMPD)
+        {
+            SO_MPD mpdValues = (SO_MPD)ScriptableObject.CreateInstance("SO_MPD");
+            mpdValues.SetValues(mpdHeightMin, mpdHeightMax, mpdHeightDampenerPower, mpdRoughness, mpdSmoothIterations);
+            AssetDatabase.CreateAsset(mpdValues, "Assets/Resources/ScriptableObjects/MidpointDisplacement/SO_MPD_" + biomeSOName + ".asset");
+            AssetDatabase.SaveAssets();
+            biomeValues.SetBaseTerrain(mpdValues);
+        }
+    }
+
+    private void DeleteBiomeAssets()
+    {
+        if (addPerlin)
+        {
+            AssetDatabase.DeleteAsset("Assets/Resources/ScriptableObjects/Perlin/SO_Perlin_" + biomeSOName + ".asset");
+        }
+        else if (addVoronoi)
+        {
+            AssetDatabase.DeleteAsset("Assets/Resources/ScriptableObjects/Voronoi/SO_Voronoi_" + biomeSOName + ".asset");
+        }
+        else if (addMPD)
+        {
+            AssetDatabase.DeleteAsset("Assets/Resources/ScriptableObjects/MidpointDisplacement/SO_MPD_" + biomeSOName + ".asset");
+        }
+
+        if (addWater)
+        {
+            AssetDatabase.DeleteAsset("Assets/Resources/ScriptableObjects/Water/SO_Water_" + biomeSOName + ".asset");
+        }
+        if (addDetail)
+        {
+            AssetDatabase.DeleteAsset("Assets/Resources/ScriptableObjects/Details/SO_Details_" + biomeSOName + ".asset");
+        }
+        if (addTrees)
+        {
+            AssetDatabase.DeleteAsset("Assets/Resources/ScriptableObjects/Trees/SO_Trees_" + biomeSOName + ".asset");
+        }
+        if (addTextures)
+        {
+            AssetDatabase.DeleteAsset("Assets/Resources/ScriptableObjects/GroundTextures/SO_GroundTextures_"
+                + biomeSOName + ".asset");
         }
     }
     #endregion

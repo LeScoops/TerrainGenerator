@@ -226,8 +226,6 @@ GameObject:
   - component: {fileID: 735806297}
   - component: {fileID: 735806296}
   - component: {fileID: 735806295}
-  - component: {fileID: 735806294}
-  - component: {fileID: 735806298}
   - component: {fileID: 735806299}
   m_Layer: 0
   m_Name: Terrain
@@ -236,23 +234,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 0
---- !u!114 &735806294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 735806293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b62873cb3272df8498520b2131ef3324, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  resetTerrain: 0
-  generateTerrain: 0
-  completeBiomeValues: {fileID: 11400000, guid: 0507f3cd650851345942ed4c65627b4e, type: 2}
-  smoothIterations: 5
-  smoothTerrain: 0
 --- !u!154 &735806295
 TerrainCollider:
   m_ObjectHideFlags: 0
@@ -312,43 +293,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &735806298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 735806293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90212f1801b1d224c836b7d3b6e111aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  generateDetails: 0
-  baseDetails: {fileID: 11400000, guid: 5c99cfc463061a746b2324d61fcc99b2, type: 2}
-  givenLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
-  smoothIterations: 1
-  erosionType: 0
-  erosionStrength: 0.1
-  erosionAmount: 0.01
-  springsPerRiver: 5
-  solubility: 0.01
-  droplets: 10
-  erosionSmoothAmount: 5
-  numberOfClouds: 1
-  particlesPerCloud: 50
-  cloudParticleSize: 5
-  cloudScaleMin: {x: 1, y: 1, z: 1}
-  cloudScaleMax: {x: 1, y: 1, z: 1}
-  cloudMaterial: {fileID: 0}
-  cloudShadowMaterial: {fileID: 0}
-  cloudColour: {r: 1, g: 1, b: 1, a: 1}
-  cloudLining: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  cloudMinSpeed: 0.2
-  cloudMaxSpeed: 0.5
-  cloudDistanceTravelled: 500
 --- !u!114 &735806299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,7 +307,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resetTerrain: 1
   generateBiome: 0
-  biome: {fileID: 11400000, guid: 0507f3cd650851345942ed4c65627b4e, type: 2}
+  biome: {fileID: 11400000, guid: d78da4d78c87731499e772a661389808, type: 2}
 --- !u!1 &1202017812
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,8 +418,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1284999361}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 500, y: 21, z: 500}
-  m_LocalScale: {x: 500, y: 1, z: 500}
+  m_LocalPosition: {x: 500, y: 24, z: 500}
+  m_LocalScale: {x: 750, y: 1, z: 750}
   m_Children: []
   m_Father: {fileID: 735806297}
   m_RootOrder: 0
@@ -647,6 +591,7 @@ GameObject:
   - component: {fileID: 1889872335}
   - component: {fileID: 1889872334}
   - component: {fileID: 1889872333}
+  - component: {fileID: 1889872337}
   m_Layer: 0
   m_Name: Terrain (1)
   m_TagString: Untagged
@@ -706,7 +651,7 @@ MonoBehaviour:
     minHeight: 0
     maxHeight: 1
     minSlope: 0
-    maxSlope: 90
+    maxSlope: 45
     dryColour: {r: 0.9827944, g: 1, b: 0, a: 1}
     healthyColour: {r: 0.017205596, g: 1, b: 0, a: 1}
     heightRange: {x: 1, y: 1}
@@ -736,7 +681,7 @@ MonoBehaviour:
   testTrees: 0
   trees:
   - mesh: {fileID: 100000, guid: c91c1eb85782d5748ace27eb4d7415bb, type: 3}
-    minHeight: 0
+    minHeight: 0.05
     maxHeight: 1
     scattering: 5
     minSlope: 0
@@ -746,13 +691,49 @@ MonoBehaviour:
     colour1: {r: 1, g: 1, b: 1, a: 1}
     colour2: {r: 1, g: 1, b: 1, a: 1}
     lightColour: {r: 1, g: 1, b: 1, a: 1}
-    numberOfTrees: 10
+    numberOfTrees: 500
   generationType: 1
-  maximumTrees: 10
+  maximumTrees: 100
   treeSpacing: 5
   terrainLayer: 8
   createTreesSO: 0
   treesSOName: Default
+  testGroundTextures: 0
+  groundTextures:
+  - texture: {fileID: 2800000, guid: c6e0767b1f8c34890ac245217f4b9731, type: 3}
+    minHeight: 0
+    maxHeight: 1
+    minSlope: 0
+    maxSlope: 45
+    offset: 0.1
+    xNoise: 0.1
+    yNoise: 0.1
+    noiseScale: 0.05
+    tileOffset: {x: 0, y: 0}
+    tileSize: {x: 20, y: 20}
+  - texture: {fileID: 2800000, guid: 440eb36db91ca410f800ff3cfe43572f, type: 3}
+    minHeight: 0
+    maxHeight: 1
+    minSlope: 45
+    maxSlope: 90
+    offset: 0.1
+    xNoise: 0.1
+    yNoise: 0.1
+    noiseScale: 0.05
+    tileOffset: {x: 0, y: 0}
+    tileSize: {x: 20, y: 20}
+  createGroundTextureSO: 0
+  groundTextureSOName: Default
+  testBiome: 0
+  addPerlin: 1
+  addMPD: 0
+  addVoronoi: 0
+  addWater: 1
+  addTrees: 0
+  addDetail: 0
+  addTextures: 1
+  createBiomeSO: 0
+  biomeSOName: BiomeTest
 --- !u!154 &1889872334
 TerrainCollider:
   m_ObjectHideFlags: 0
@@ -812,3 +793,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1889872337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1889872332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a741c3a11d893c94d8ec032d6b89f951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resetTerrain: 0
+  generateBiome: 0
+  biome: {fileID: 11400000, guid: ca2d4d59f03037a4384430f2002b932f, type: 2}

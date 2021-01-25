@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "so_Details", menuName = "Scriptable Objects/Values/Details")]
-public class SO_Details : ScriptableObject
+public class SO_Details : BaseDetailsGeneration
 {
     [System.Serializable]
     public class Detail
@@ -30,7 +30,7 @@ public class SO_Details : ScriptableObject
         new Detail()
     };
 
-    public void Generate(TerrainData terrainData)
+    public override void Generate(TerrainData terrainData, Transform parentTransform)
     {
         DetailPrototype[] newDetailPrototypes;
         newDetailPrototypes = new DetailPrototype[details.Count];

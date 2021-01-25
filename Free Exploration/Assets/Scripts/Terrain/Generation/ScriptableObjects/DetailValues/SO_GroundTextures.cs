@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "so_GroundTexture", menuName = "Scriptable Objects/Values/GroundTexture")]
-public class SO_GroundTextures : ScriptableObject
+public class SO_GroundTextures : BaseDetailsGeneration
 {
     [System.Serializable]
     public class GroundTexture
@@ -30,7 +30,7 @@ public class SO_GroundTextures : ScriptableObject
         new GroundTexture()
     };
 
-    public void Generate(TerrainData terrainData, GameObject gameObject)
+    public override void Generate(TerrainData terrainData, Transform parentTransform)
     {
         TerrainLayer[] newSplatPrototype;
         newSplatPrototype = new TerrainLayer[groundTextures.Count];
@@ -45,7 +45,7 @@ public class SO_GroundTextures : ScriptableObject
             string path = "Assets/TerrainAssets/Layers/Layer_" + spindex + ".terrainlayer";
             AssetDatabase.CreateAsset(newSplatPrototype[spindex], path);
             spindex++;
-            Selection.activeObject = gameObject;
+            Selection.activeObject = parentTransform.gameObject;
         }
         terrainData.terrainLayers = newSplatPrototype;
 
@@ -80,6 +80,11 @@ public class SO_GroundTextures : ScriptableObject
             }
         }
         terrainData.SetAlphamaps(0, 0, splatMapData);
+    }
+
+    public void SetValues(List<GroundTexture> groundTextures)
+    {
+        this.groundTextures = groundTextures;
     }
 
     void NormalizeVector(float[] v)

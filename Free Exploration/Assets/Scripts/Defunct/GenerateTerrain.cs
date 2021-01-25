@@ -11,7 +11,7 @@ public class GenerateTerrain : MonoBehaviour
     [Header("Generate Terrain Toggle")]
     [SerializeField] bool resetTerrain = true;
     [SerializeField] bool generateTerrain = false;
-    [SerializeField] SO_CompleteBiome completeBiomeValues = null;
+    //[SerializeField] SO_CompleteBiome completeBiomeValues = null;
     
     [Header("Smooth Terrain")]
     [Range(1,10)]
@@ -41,18 +41,18 @@ public class GenerateTerrain : MonoBehaviour
 
     public void GenerateTerrains()
     {
-        if (completeBiomeValues)
-        {
-            completeBiomeValues.baseTerrainGeneration.GenerateTerrain(terrainData, GetHeightMap());
-            if (completeBiomeValues.water)
-            {
-                completeBiomeValues.water.Generate(terrainData, this.transform);
-            }
-        }
-        else
-        {
-            Debug.Log("Generate Failed");
-        }
+        //if (completeBiomeValues)
+        //{
+        //    completeBiomeValues.baseTerrainGeneration.GenerateTerrain(terrainData, GetHeightMap());
+        //    if (completeBiomeValues.water)
+        //    {
+        //        completeBiomeValues.water.Generate(terrainData, this.transform);
+        //    }
+        //}
+        //else
+        //{
+        //    Debug.Log("Generate Failed");
+        //}
     }
 
     List<Vector2> GenerateNeighbours(Vector2 pos, int width, int height)

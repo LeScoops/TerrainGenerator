@@ -13,7 +13,7 @@ public class SO_CompleteDetails : ScriptableObject
     {
         if (details)
         {
-            details.Generate(terrainData);
+            //details.Generate(terrainData);
         }
         if (trees)
         {
@@ -21,7 +21,7 @@ public class SO_CompleteDetails : ScriptableObject
         }
         if (groundTextures)
         {
-            groundTextures.Generate(terrainData, gameObject);
+            //groundTextures.Generate(terrainData, gameObject);
         }
     }
 }

@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class BaseTerrainGeneration : ScriptableObject
+public abstract class BaseTerrainGeneration : ScriptableObject
 {
-    public virtual void GenerateTerrain(TerrainData terrainData, float[,] heightMap)
-    {
-        Debug.Log("ERROR: Type of Terrain not set");
-    }
+    public abstract void GenerateTerrain(TerrainData terrainData, float[,] heightMap);
 
     public void Smooth(TerrainData terrainData, int smoothIterations = 1)
     {

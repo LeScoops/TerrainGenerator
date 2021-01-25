@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trees:
   - mesh: {fileID: 100000, guid: c91c1eb85782d5748ace27eb4d7415bb, type: 3}
-    minHeight: 0
+    minHeight: 0.05
     maxHeight: 1
     scattering: 5
     minSlope: 0
@@ -24,8 +24,8 @@ MonoBehaviour:
     colour1: {r: 1, g: 1, b: 1, a: 1}
     colour2: {r: 1, g: 1, b: 1, a: 1}
     lightColour: {r: 1, g: 1, b: 1, a: 1}
-    numberOfTrees: 10
+    numberOfTrees: 500
   generationType: 1
-  maximumTrees: 10
+  maximumTrees: 100
   treeSpacing: 5
   terrainLayer: 8

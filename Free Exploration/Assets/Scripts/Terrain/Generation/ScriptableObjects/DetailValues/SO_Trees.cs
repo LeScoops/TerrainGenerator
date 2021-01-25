@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "so_Trees", menuName = "Scriptable Objects/Values/Trees")]
-public class SO_Trees : ScriptableObject
+public class SO_Trees : BaseDetailsGeneration
 {
     [System.Serializable]
     public class Trees
@@ -30,7 +31,7 @@ public class SO_Trees : ScriptableObject
     public int treeSpacing = 5;
     [SerializeField] int terrainLayer = 8;
 
-    public void Generate(TerrainData terrainData, Transform transform)
+    public override void Generate(TerrainData terrainData, Transform parentTransform)
     {
         TreePrototype[] newTreePrototypes;
         newTreePrototypes = new TreePrototype[trees.Count];
@@ -45,8 +46,9 @@ public class SO_Trees : ScriptableObject
 
         if (generationType == DetailGenerationTypes.Grid)
         {
-            Debug.Log("Grid Tree Generation");
             List<TreeInstance> allVegetation = new List<TreeInstance>();
+            float treesProgress = 0;
+            EditorUtility.DisplayProgressBar("Generating Trees", "Progress", treesProgress);
             for (int z = 0; z < terrainData.size.z; z += treeSpacing)
             {
                 for (int x = 0; x < terrainData.size.x; x += treeSpacing)
@@ -70,14 +72,14 @@ public class SO_Trees : ScriptableObject
 
                             Vector3 treeWorldPos = new Vector3(instance.position.x * terrainData.size.x,
                                 instance.position.y * terrainData.size.y,
-                                instance.position.z * terrainData.size.z) + transform.position;
+                                instance.position.z * terrainData.size.z) + parentTransform.position;
 
                             RaycastHit hit;
                             int layerMask = terrainLayer;
                             if (Physics.Raycast(treeWorldPos, -Vector3.up, out hit, 100, layerMask) ||
                                 Physics.Raycast(treeWorldPos, Vector3.up, out hit, 100, layerMask))
                             {
-                                float treeHeight = (hit.point.y - transform.position.y) / terrainData.size.y;
+                                float treeHeight = (hit.point.y - parentTransform.position.y) / terrainData.size.y;
                                 instance.position = new Vector3(instance.position.x, treeHeight, instance.position.z);
                                 instance.rotation = Random.Range(0, 360);
                                 instance.prototypeIndex = tp;
@@ -88,6 +90,8 @@ public class SO_Trees : ScriptableObject
                                 instance.widthScale = scale;
                                 allVegetation.Add(instance);
                                 if (allVegetation.Count >= maximumTrees) goto TREESDONE;
+                                treesProgress++;
+                                EditorUtility.DisplayProgressBar("Generating Trees", "Progress", treesProgress / trees[tp].numberOfTrees);
                             }
                         }
                     }
@@ -95,10 +99,13 @@ public class SO_Trees : ScriptableObject
             }
         TREESDONE:
             terrainData.treeInstances = allVegetation.ToArray();
+            EditorUtility.ClearProgressBar();
         }
         else if (generationType == DetailGenerationTypes.Random)
         {
             List<TreeInstance> allVegetation = new List<TreeInstance>();
+            float treesProgress = 0;
+            EditorUtility.DisplayProgressBar("Generating Trees", "Progress", treesProgress);
             for (int tp = 0; tp < terrainData.treePrototypes.Length; tp++)
             {
                 int treesSpawned = 0;
@@ -134,9 +141,12 @@ public class SO_Trees : ScriptableObject
                     instance.widthScale = scale;
                     allVegetation.Add(instance);
                     treesSpawned++;
+                    treesProgress++;
+                    EditorUtility.DisplayProgressBar("Generating Trees", "Progress", treesProgress/ trees[tp].numberOfTrees);
                 }
             }
             terrainData.treeInstances = allVegetation.ToArray();
+            EditorUtility.ClearProgressBar();
         }
     }
 

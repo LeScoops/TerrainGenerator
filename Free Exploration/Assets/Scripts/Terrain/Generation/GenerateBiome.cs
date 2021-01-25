@@ -7,7 +7,7 @@ public class GenerateBiome : MonoBehaviour
 {
     [SerializeField] bool resetTerrain = false;
     [SerializeField] bool generateBiome = false;
-    [SerializeField] SO_CompleteBiome biome = null;
+    [SerializeField] SO_Biome biome = null;
 
     Terrain terrain = null;
     TerrainData terrainData = null;
@@ -20,14 +20,14 @@ public class GenerateBiome : MonoBehaviour
 
     void Update()
     {
-        if (!biome)
-        {
-            Debug.Log("Missing biome info");
-            return;
-        }
-
         if (generateBiome)
         {
+            if (!biome)
+            {
+                Debug.Log("Missing biome info");
+                return;
+            }
+
             Generate();
             generateBiome = false;
         }
@@ -35,7 +35,7 @@ public class GenerateBiome : MonoBehaviour
 
     void Generate()
     {
-        biome.Generate(terrainData, GetHeightMap(), this.gameObject, this.transform);
+        biome.Generate(terrainData, GetHeightMap(), this.transform);
     }
 
     float[,] GetHeightMap()

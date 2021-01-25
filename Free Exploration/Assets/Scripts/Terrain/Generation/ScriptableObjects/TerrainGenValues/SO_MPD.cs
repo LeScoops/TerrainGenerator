@@ -15,8 +15,6 @@ public class SO_MPD : BaseTerrainGeneration
     {
         int width = terrainData.heightmapResolution - 1;
         int squareSize = width;
-        //float heightMin = this.heightMin;
-        //float heightMax = this.heightMax;
         float heightDampener = (float)Mathf.Pow(heightDampenerPower, -1 * roughness);
 
         int cornerX, cornerY;
