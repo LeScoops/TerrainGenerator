@@ -150,6 +150,11 @@ public class SO_Trees : BaseDetailsGeneration
         }
     }
 
+    public void RemoveTrees(TerrainData terrainData)
+    {
+        terrainData.treePrototypes = null;
+    }
+
     public void SetValues(List<Trees> trees, DetailGenerationTypes generationType = DetailGenerationTypes.Random, int maximumTrees = 1000,
         int treeSpacing = 5, int terrainLayer = 8)
     {

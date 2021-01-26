@@ -275,6 +275,19 @@ public class BiomeCreator : MonoBehaviour
     #region Biome
     void Biome()
     {
+        if (addPerlin)
+        {
+            addVoronoi = addMPD = false;
+        }
+        else if (addVoronoi)
+        {
+            addPerlin = addMPD = false;
+        }
+        else if (addMPD)
+        {
+            addPerlin = addVoronoi = false;
+        }
+
         if (testBiome)
         {
             SO_Biome biomeValues = (SO_Biome)ScriptableObject.CreateInstance("SO_Biome");
@@ -333,6 +346,39 @@ public class BiomeCreator : MonoBehaviour
                 + biomeSOName + ".asset");
             AssetDatabase.SaveAssets();
             listOfDetailValues.Add(groundTextureValues);
+        }
+
+        if (!addWater)
+        {
+            GameObject waterObject = GetComponentInChildren(typeof(WaterIdentifier)).gameObject;
+            DestroyImmediate(waterObject);
+        }
+        if (!addDetail)
+        {
+            //TODO Remove Details
+            //SO_Details detailValues = (SO_Details)ScriptableObject.CreateInstance("SO_Details");
+            //detailValues.SetValues(null);
+            //AssetDatabase.CreateAsset(detailValues, "Assets/Resources/ScriptableObjects/Details/SO_Details_" + biomeSOName + ".asset");
+            //AssetDatabase.SaveAssets();
+            //listOfDetailValues.Add(detailValues);
+            //terrainData.
+        }
+        if (!addTrees)
+        {
+            TreeInstance[] currentTreeInstances = terrainData.treeInstances;
+            currentTreeInstances = new TreeInstance[0];
+            terrainData.SetTreeInstances(currentTreeInstances, false);
+            terrainData.treePrototypes = null;
+        }
+        if (!addTextures)
+        {
+            //TODO Remove Textures
+            //SO_GroundTextures groundTextureValues = (SO_GroundTextures)ScriptableObject.CreateInstance("SO_GroundTextures");
+            //groundTextureValues.SetValues(null);
+            //AssetDatabase.CreateAsset(groundTextureValues, "Assets/Resources/ScriptableObjects/GroundTextures/SO_GroundTextures_"
+            //    + biomeSOName + ".asset");
+            //AssetDatabase.SaveAssets();
+            //listOfDetailValues.Add(groundTextureValues);
         }
         biomeValues.SetDetailsGenerationList(listOfDetailValues);
     }

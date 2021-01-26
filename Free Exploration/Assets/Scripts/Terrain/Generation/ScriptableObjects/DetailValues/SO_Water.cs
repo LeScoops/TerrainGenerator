@@ -27,6 +27,7 @@ public class SO_Water : BaseDetailsGeneration
         {
             water = Instantiate(waterGameObject, transform.position, transform.rotation);
             water.name = "water";
+            water.AddComponent(typeof(WaterIdentifier));
         }
         water.transform.position = transform.position + new Vector3(terrainData.size.x / 2,
                                                                         waterHeight * terrainData.size.y,
