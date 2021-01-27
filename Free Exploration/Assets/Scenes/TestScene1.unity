@@ -636,8 +636,8 @@ MonoBehaviour:
   addVoronoi: 0
   addWater: 0
   addTrees: 0
-  addDetail: 1
-  addTextures: 1
+  addDetail: 0
+  addTextures: 0
   createBiomeSO: 0
   biomeSOName: BiomeTest
 --- !u!154 &1889872334

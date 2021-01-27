@@ -94,6 +94,7 @@ public class BiomeCreator : MonoBehaviour
     [SerializeField] bool createGroundTextureSO = false;
     [SerializeField] string groundTextureSOName = "Default";
     #endregion
+    #region Biome Generation Bools
     [Header("----------")]
     [Header("Biome Generation")]
     [Header("----------")]
@@ -107,6 +108,7 @@ public class BiomeCreator : MonoBehaviour
     [SerializeField] bool addTextures = false;
     [SerializeField] bool createBiomeSO = false;
     [SerializeField] string biomeSOName = "Default";
+    #endregion
 
     private void Start()
     {
@@ -350,35 +352,31 @@ public class BiomeCreator : MonoBehaviour
 
         if (!addWater)
         {
-            GameObject waterObject = GetComponentInChildren(typeof(WaterIdentifier)).gameObject;
-            DestroyImmediate(waterObject);
+            if (transform.Find("water"))
+            {
+                DestroyImmediate(transform.Find("water").gameObject);
+            }
         }
         if (!addDetail)
         {
-            //TODO Remove Details
-            //SO_Details detailValues = (SO_Details)ScriptableObject.CreateInstance("SO_Details");
-            //detailValues.SetValues(null);
-            //AssetDatabase.CreateAsset(detailValues, "Assets/Resources/ScriptableObjects/Details/SO_Details_" + biomeSOName + ".asset");
-            //AssetDatabase.SaveAssets();
-            //listOfDetailValues.Add(detailValues);
-            //terrainData.
+            int[,] detailMap = new int[terrainData.detailWidth, terrainData.detailHeight];
+            for (int i = 0; i < terrainData.detailPrototypes.Length; i++)
+            {
+                terrainData.SetDetailLayer(0, 0, i, detailMap);
+            }
+            terrainData.detailPrototypes = null;
         }
         if (!addTrees)
         {
-            TreeInstance[] currentTreeInstances = terrainData.treeInstances;
-            currentTreeInstances = new TreeInstance[0];
+            TreeInstance[] currentTreeInstances = new TreeInstance[0];
             terrainData.SetTreeInstances(currentTreeInstances, false);
             terrainData.treePrototypes = null;
         }
         if (!addTextures)
         {
-            //TODO Remove Textures
-            //SO_GroundTextures groundTextureValues = (SO_GroundTextures)ScriptableObject.CreateInstance("SO_GroundTextures");
-            //groundTextureValues.SetValues(null);
-            //AssetDatabase.CreateAsset(groundTextureValues, "Assets/Resources/ScriptableObjects/GroundTextures/SO_GroundTextures_"
-            //    + biomeSOName + ".asset");
-            //AssetDatabase.SaveAssets();
-            //listOfDetailValues.Add(groundTextureValues);
+            float[,,] splatMapData = new float[terrainData.alphamapWidth, terrainData.alphamapHeight, terrainData.alphamapLayers];
+            terrainData.SetAlphamaps(0, 0, splatMapData);
+            terrainData.terrainLayers = null;
         }
         biomeValues.SetDetailsGenerationList(listOfDetailValues);
     }
