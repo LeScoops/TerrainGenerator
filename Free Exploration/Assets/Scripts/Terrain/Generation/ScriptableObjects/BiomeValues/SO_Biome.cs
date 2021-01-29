@@ -14,7 +14,6 @@ public class SO_Biome : ScriptableObject
         {
             terrainGenerationValues.GenerateTerrain(terrainData, heightMap);
         }
-
         if (listOfDetailsGeneration.Count != 0)
         {
             foreach (BaseDetailsGeneration detailValues in listOfDetailsGeneration)
@@ -22,8 +21,6 @@ public class SO_Biome : ScriptableObject
                 detailValues.Generate(terrainData, givenTransform);
             }
         }
-
-        Debug.Log("Generation Successful");
     }
 
     public void SetBaseTerrain(BaseTerrainGeneration terrainGenerationValues)

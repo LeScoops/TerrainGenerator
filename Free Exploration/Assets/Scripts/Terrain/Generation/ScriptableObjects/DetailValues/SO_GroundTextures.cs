@@ -35,7 +35,7 @@ public class SO_GroundTextures : BaseDetailsGeneration
         TerrainLayer[] newSplatPrototype;
         newSplatPrototype = new TerrainLayer[groundTextures.Count];
         int spindex = 0;
-        foreach (SO_GroundTextures.GroundTexture sh in groundTextures)
+        foreach (GroundTexture sh in groundTextures)
         {
             newSplatPrototype[spindex] = new TerrainLayer();
             newSplatPrototype[spindex].diffuseTexture = sh.texture;

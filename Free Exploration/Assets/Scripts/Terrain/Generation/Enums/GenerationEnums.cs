@@ -18,6 +18,6 @@ public enum VoronoiType
 public enum DetailGenerationTypes
 {
     Grid,
-    Random,
-    Islands
+    Random
+    //Islands
 }
