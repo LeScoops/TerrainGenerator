@@ -13,7 +13,7 @@ public class SO_Voronoi : BaseTerrainGeneration
     public VoronoiType voronoiType = VoronoiType.Linear;
     public int smoothIterations = 1;
 
-    public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap)
+    public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset)
     {
         for (int p = 0; p < vPeakCount; p++)
         {

@@ -12,14 +12,16 @@ public class SO_PerlinValues : BaseTerrainGeneration
     public float perlinHeightScale = 0.09f;
     public int smoothIterations = 1;
 
-    public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap)
+    public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset)
     {
-        float offset = Random.Range(0, 10000);
-        for (int y = 0; y < terrainData.heightmapResolution; y++)
+        for (int x = 0; x < terrainData.heightmapResolution; x++)
         {
-            for (int x = 0; x < terrainData.heightmapResolution; x++)
+            for (int z = 0; z < terrainData.heightmapResolution; z++)
             {
-                heightMap[x, y] += TerrainUtils.fBM((x + offset) * perlinXScale, (y + offset) * perlinYScale, perlinOctaves,
+                heightMap[x, z] += TerrainUtils.fBM(
+                    (x + offset.x) * perlinXScale,
+                    (z + offset.y) * perlinYScale, 
+                    perlinOctaves,
                     perlinPersistance) * perlinHeightScale;
             }
         }

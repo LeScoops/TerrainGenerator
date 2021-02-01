@@ -35,7 +35,8 @@ public class GenerateBiome : MonoBehaviour
 
     void Generate()
     {
-        biome.Generate(terrainData, GetHeightMap(), this.transform);
+        Vector2 seed = new Vector2(Random.Range(0, 10000), Random.Range(0, 10000));
+        biome.Generate(terrainData, GetHeightMap(), this.transform, seed);
     }
 
     float[,] GetHeightMap()

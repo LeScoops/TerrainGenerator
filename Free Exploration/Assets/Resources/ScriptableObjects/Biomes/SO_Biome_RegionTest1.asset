@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: SO_Biome_RegionTest1
   m_EditorClassIdentifier: 
   terrainGenerationValues: {fileID: 11400000, guid: a7dd1cb104aa4f84e93915e751cab548, type: 2}
+  generationType: 0
   listOfDetailsGeneration:
   - {fileID: 11400000, guid: 955b642787ea12c409d69f9e7af81d68, type: 2}
-  - {fileID: 11400000, guid: c9c16bb3a5be8c1458595baa7627a182, type: 2}
   - {fileID: 11400000, guid: 9a569f8e76110ad4f838a9e116fa8a79, type: 2}
+  - {fileID: 11400000, guid: c9c16bb3a5be8c1458595baa7627a182, type: 2}

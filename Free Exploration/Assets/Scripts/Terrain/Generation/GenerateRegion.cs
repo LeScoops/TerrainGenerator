@@ -20,28 +20,40 @@ public class GenerateRegion : MonoBehaviour
 
     public void Generate()
     {
-        for (int i = 0; i < biomes.Count; i++)
+        int seed = Random.Range(0, 10000);
+        Transform parentTransform = this.transform;
+        Vector3 terrainSize = new Vector3(1024, 600, 1024);
+
+        int value = biomes.Count;
+        for (int x = 0; x < value; x++)
         {
-            GameObject terrainGameObject = new GameObject();
-            terrainGameObject.name = "Biomes-" + i;
-            terrainGameObject.AddComponent<Terrain>();
-            terrainGameObject.AddComponent<TerrainCollider>();
+            for (int z = 0; z < value; z++)
+            {
+                GameObject terrainGameObject = new GameObject();
+                terrainGameObject.name = "Biomes-" + x + "-" + z;
+                terrainGameObject.AddComponent<Terrain>();
+                terrainGameObject.AddComponent<TerrainCollider>();
 
-            Terrain terrain = terrainGameObject.GetComponent<Terrain>();
-            terrain.materialTemplate = defaultMaterial;
+                Terrain terrain = terrainGameObject.GetComponent<Terrain>();
+                terrain.materialTemplate = defaultMaterial;
 
-            TerrainData terrainData = new TerrainData();
-            terrainData.name = "Biomes-" + i;   
-            terrainData.heightmapResolution = 513;
-            terrainData.size = new Vector3(1000, 600, 1000);
-            terrainData.SetDetailResolution(1024, 32);            
+                TerrainData terrainData = new TerrainData();
+                terrainData.name = "Biomes-" + x + "-" + z;   
+                terrainData.heightmapResolution = 513;
+                terrainData.size = terrainSize;
+                terrainData.SetDetailResolution(1024, 32);            
 
-            terrainGameObject.GetComponent<Terrain>().terrainData = terrainData;
-            terrainGameObject.GetComponent<TerrainCollider>().terrainData = terrainData;
-            terrainGameObject.transform.SetParent(this.transform);
+                terrainGameObject.GetComponent<Terrain>().terrainData = terrainData;
+                terrainGameObject.GetComponent<TerrainCollider>().terrainData = terrainData;
+                terrainGameObject.transform.SetParent(this.transform);
 
-            terrainGameObject.transform.Translate(Vector3.right * terrainData.size.x * i);
-            biomes[i].Generate(terrainData, terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution), this.transform);
+                terrainGameObject.transform.position = new Vector3(terrainData.size.x * x, 0, terrainData.size.z * z);
+
+                Vector2 offset = new Vector2(seed + terrainData.size.z / 2 * z, seed + terrainData.size.x / 2 * x);                
+
+                biomes[x].Generate(terrainData, terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution),
+                    this.transform, offset);
+            }
         }
     }
 }

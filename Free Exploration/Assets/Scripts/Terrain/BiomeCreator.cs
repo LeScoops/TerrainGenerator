@@ -139,14 +139,17 @@ public class BiomeCreator : MonoBehaviour
         if (testPerlin)
         {
             SO_PerlinValues perlinValues = (SO_PerlinValues)ScriptableObject.CreateInstance("SO_PerlinValues");
-            perlinValues.SetValues(perlinXScale, perlinYScale, perlinOctaves, perlinPersistance, perlinHeightScale, perlinSmoothIterations);
-            perlinValues.GenerateTerrain(terrainData, GetHeightMap());
+            Vector2 seed = new Vector2(Random.Range(0, 10000), Random.Range(0, 10000));
+            perlinValues.SetValues(perlinXScale, perlinYScale, perlinOctaves, perlinPersistance, perlinHeightScale, 
+                perlinSmoothIterations);            
+            perlinValues.GenerateTerrain(terrainData, GetHeightMap(), this.transform, seed);
             testPerlin = false;
         }
         if (createPerlinSO)
         {
             SO_PerlinValues perlinValues = (SO_PerlinValues)ScriptableObject.CreateInstance("SO_PerlinValues");
-            perlinValues.SetValues(perlinXScale, perlinYScale, perlinOctaves, perlinPersistance, perlinHeightScale, perlinSmoothIterations);
+            perlinValues.SetValues(perlinXScale, perlinYScale, perlinOctaves, perlinPersistance, perlinHeightScale, 
+                perlinSmoothIterations);
             AssetDatabase.CreateAsset(perlinValues, "Assets/Resources/ScriptableObjects/Perlin/SO_Perlin_" + perlinSOName + ".asset");
             AssetDatabase.SaveAssets();
             createPerlinSO = false;
@@ -160,7 +163,7 @@ public class BiomeCreator : MonoBehaviour
         {
             SO_Voronoi voronoiValues = (SO_Voronoi)ScriptableObject.CreateInstance("SO_Voronoi");
             voronoiValues.SetValues(vPeakCount, vFallOff, vDropOff, vMinHeight, vMaxHeight, voronoiType, vSmoothIterations);
-            voronoiValues.GenerateTerrain(terrainData, GetHeightMap());
+            voronoiValues.GenerateTerrain(terrainData, GetHeightMap(), this.transform, new Vector2(0,0));
             testVoronoi = false;
         }
         if (createVoronoiSO)
@@ -180,7 +183,7 @@ public class BiomeCreator : MonoBehaviour
         {
             SO_MPD mpdValues = (SO_MPD)ScriptableObject.CreateInstance("SO_MPD");
             mpdValues.SetValues(mpdHeightMin, mpdHeightMax, mpdHeightDampenerPower, mpdRoughness, mpdSmoothIterations);
-            mpdValues.GenerateTerrain(terrainData, GetHeightMap());
+            mpdValues.GenerateTerrain(terrainData, GetHeightMap(), this.transform, new Vector2(0, 0));
             testMPD = false;
         }
         if (createMPDSO)
@@ -295,8 +298,8 @@ public class BiomeCreator : MonoBehaviour
             SO_Biome biomeValues = (SO_Biome)ScriptableObject.CreateInstance("SO_Biome");
             BiomeTerrainValues(biomeValues);
             BiomeDetailValues(biomeValues);
-
-            biomeValues.Generate(terrainData, GetHeightMap(), this.transform);
+            Vector2 seed = new Vector2(Random.Range(0, 10000), Random.Range(0, 10000));
+            biomeValues.Generate(terrainData, GetHeightMap(), this.transform, seed);
             DeleteBiomeAssets();
             testBiome = false;
         }
@@ -304,6 +307,18 @@ public class BiomeCreator : MonoBehaviour
         if (createBiomeSO)
         {
             SO_Biome biomeValues = (SO_Biome)ScriptableObject.CreateInstance("SO_Biome");
+            if (addPerlin)
+            {
+                biomeValues.generationType = GenerationTypes.SinglePerlin;
+            }
+            else if (addVoronoi)
+            {
+                biomeValues.generationType = GenerationTypes.Voronoi;
+            }
+            else if (addMPD)
+            {
+                biomeValues.generationType = GenerationTypes.MidpointDisplacement;
+            }
             BiomeTerrainValues(biomeValues);
             BiomeDetailValues(biomeValues);
             AssetDatabase.CreateAsset(biomeValues, "Assets/Resources/ScriptableObjects/Biomes/SO_Biome_"
@@ -386,7 +401,8 @@ public class BiomeCreator : MonoBehaviour
         if (addPerlin)
         {
             SO_PerlinValues perlinValues = (SO_PerlinValues)ScriptableObject.CreateInstance("SO_PerlinValues");
-            perlinValues.SetValues(perlinXScale, perlinYScale, perlinOctaves, perlinPersistance, perlinHeightScale, perlinSmoothIterations);
+            perlinValues.SetValues(perlinXScale, perlinYScale, perlinOctaves, perlinPersistance, perlinHeightScale,
+                perlinSmoothIterations);
             AssetDatabase.CreateAsset(perlinValues, "Assets/Resources/ScriptableObjects/Perlin/SO_Perlin_" + biomeSOName + ".asset");
             AssetDatabase.SaveAssets();
             biomeValues.SetBaseTerrain(perlinValues);

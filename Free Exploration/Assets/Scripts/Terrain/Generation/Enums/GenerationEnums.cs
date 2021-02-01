@@ -4,7 +4,8 @@
     MultiplePerlin,
     Random,
     Voronoi,
-    MidpointDisplacement
+    MidpointDisplacement,
+    Default
 }
 
 public enum VoronoiType

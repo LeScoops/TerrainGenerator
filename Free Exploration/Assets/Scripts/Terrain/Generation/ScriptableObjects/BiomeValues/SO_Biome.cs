@@ -6,13 +6,14 @@ using UnityEngine;
 public class SO_Biome : ScriptableObject
 {
     public BaseTerrainGeneration terrainGenerationValues = null;
+    public GenerationTypes generationType = GenerationTypes.Default;
     public List<BaseDetailsGeneration> listOfDetailsGeneration = null;
 
-    public void Generate(TerrainData terrainData, float[,] heightMap, Transform givenTransform)
+    public void Generate(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset)
     {
         if (terrainGenerationValues)
         {
-            terrainGenerationValues.GenerateTerrain(terrainData, heightMap);
+            terrainGenerationValues.GenerateTerrain(terrainData, heightMap, givenTransform, offset);
         }
         if (listOfDetailsGeneration.Count != 0)
         {

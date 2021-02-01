@@ -11,7 +11,7 @@ public class SO_MPD : BaseTerrainGeneration
     public int roughness = 2;
     public int smoothIterations = 1;
 
-    public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap)
+    public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset)
     {
         int width = terrainData.heightmapResolution - 1;
         int squareSize = width;

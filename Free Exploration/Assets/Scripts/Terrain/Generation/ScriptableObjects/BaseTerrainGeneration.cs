@@ -5,8 +5,7 @@ using UnityEngine;
 
 public abstract class BaseTerrainGeneration : ScriptableObject
 {
-    public abstract void GenerateTerrain(TerrainData terrainData, float[,] heightMap);
-
+    public abstract void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset);
     public void Smooth(TerrainData terrainData, int smoothIterations = 1)
     {
         float[,] heightMap = terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution);
