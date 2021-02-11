@@ -22,3 +22,11 @@ public enum DetailGenerationTypes
     Random
     //Islands
 }
+
+public enum TerrainNeighbour
+{
+    Left,
+    Up,
+    Right,
+    Down
+}

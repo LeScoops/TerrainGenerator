@@ -13,7 +13,13 @@ public class SO_Voronoi : BaseTerrainGeneration
     public VoronoiType voronoiType = VoronoiType.Linear;
     public int smoothIterations = 1;
 
-    public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset)
+    BaseTerrainGeneration leftNeighbour;
+    BaseTerrainGeneration upNeighbour;
+    BaseTerrainGeneration rightNeighbour;
+    BaseTerrainGeneration downNeighbour;
+
+    public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset,
+        SO_PerlinValues leftPerlinValues = null, TerrainData upNeighbour = null)
     {
         for (int p = 0; p < vPeakCount; p++)
         {
@@ -81,5 +87,14 @@ public class SO_Voronoi : BaseTerrainGeneration
         this.vMaxHeight = vMaxHeight;
         this.voronoiType = voronoiType;
         this.smoothIterations = smoothIterations;
+    }
+
+    public override void SetNeighbours(BaseTerrainGeneration leftNeighbour = null, BaseTerrainGeneration upNeighbour = null,
+        BaseTerrainGeneration rightNeighbour = null, BaseTerrainGeneration downNeighbour = null)
+    {
+        this.leftNeighbour = leftNeighbour;
+        this.upNeighbour = upNeighbour;
+        this.rightNeighbour = rightNeighbour;
+        this.downNeighbour = downNeighbour;
     }
 }

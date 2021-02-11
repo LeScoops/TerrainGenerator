@@ -31,7 +31,7 @@ public class SO_Trees : BaseDetailsGeneration
     public int treeSpacing = 5;
     [SerializeField] int terrainLayer = 8;
 
-    public override void Generate(TerrainData terrainData, Transform parentTransform)
+    public override void Generate(TerrainData terrainData, Transform parentTransform, TerrainData leftNeighbour = null, TerrainData downNeighbour = null)
     {
         TreePrototype[] newTreePrototypes;
         newTreePrototypes = new TreePrototype[trees.Count];

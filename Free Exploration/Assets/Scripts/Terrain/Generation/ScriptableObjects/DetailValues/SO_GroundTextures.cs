@@ -30,7 +30,7 @@ public class SO_GroundTextures : BaseDetailsGeneration
         new GroundTexture()
     };
 
-    public override void Generate(TerrainData terrainData, Transform parentTransform)
+    public override void Generate(TerrainData terrainData, Transform parentTransform, TerrainData leftNeighbour = null, TerrainData downNeighbour = null)
     {
         TerrainLayer[] newSplatPrototype;
         newSplatPrototype = new TerrainLayer[groundTextures.Count];

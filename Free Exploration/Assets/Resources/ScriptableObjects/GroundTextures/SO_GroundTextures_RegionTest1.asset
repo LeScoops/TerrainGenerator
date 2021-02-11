@@ -17,7 +17,7 @@ MonoBehaviour:
     minHeight: 0
     maxHeight: 1
     minSlope: 0
-    maxSlope: 45
+    maxSlope: 15
     offset: 0.1
     xNoise: 0.1
     yNoise: 0.1
@@ -27,7 +27,7 @@ MonoBehaviour:
   - texture: {fileID: 2800000, guid: 440eb36db91ca410f800ff3cfe43572f, type: 3}
     minHeight: 0
     maxHeight: 1
-    minSlope: 45
+    minSlope: 15
     maxSlope: 90
     offset: 0.1
     xNoise: 0.1

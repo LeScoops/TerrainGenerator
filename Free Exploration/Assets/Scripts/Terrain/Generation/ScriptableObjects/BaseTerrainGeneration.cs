@@ -5,7 +5,12 @@ using UnityEngine;
 
 public abstract class BaseTerrainGeneration : ScriptableObject
 {
-    public abstract void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset);
+    public abstract void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset,
+        SO_PerlinValues leftPerlinValues = null, TerrainData upNeighbour = null);
+
+    public abstract void SetNeighbours(BaseTerrainGeneration leftNeighbour = null, BaseTerrainGeneration upNeighbour = null,
+        BaseTerrainGeneration rightNeighbour = null, BaseTerrainGeneration downNeighbour = null);    
+
     public void Smooth(TerrainData terrainData, int smoothIterations = 1)
     {
         float[,] heightMap = terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution);

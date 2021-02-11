@@ -9,19 +9,26 @@ public class SO_Biome : ScriptableObject
     public GenerationTypes generationType = GenerationTypes.Default;
     public List<BaseDetailsGeneration> listOfDetailsGeneration = null;
 
-    public void Generate(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset)
+    public void Generate(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset,
+        SO_PerlinValues leftPerlinValues = null, TerrainData downNeighbour = null)
     {
         if (terrainGenerationValues)
         {
-            terrainGenerationValues.GenerateTerrain(terrainData, heightMap, givenTransform, offset);
+            terrainGenerationValues.GenerateTerrain(terrainData, heightMap, givenTransform, offset, leftPerlinValues);
         }
         if (listOfDetailsGeneration.Count != 0)
         {
             foreach (BaseDetailsGeneration detailValues in listOfDetailsGeneration)
             {
-                detailValues.Generate(terrainData, givenTransform);
+                detailValues.Generate(terrainData, givenTransform/*, leftNeighbour, downNeighbour*/);
             }
         }
+    }
+
+    //TODO This is gross
+    public SO_PerlinValues GetPerlinValues()
+    {
+        return (SO_PerlinValues)terrainGenerationValues;
     }
 
     public void SetBaseTerrain(BaseTerrainGeneration terrainGenerationValues)

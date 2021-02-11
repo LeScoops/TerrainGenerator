@@ -14,7 +14,7 @@ public class SO_Water : BaseDetailsGeneration
     /*public*/ Material shoreLineMaterial = null;
     /*public*/ float shoreSize = 10.0f;
 
-    public override void Generate(TerrainData terrainData, Transform transform)
+    public override void Generate(TerrainData terrainData, Transform transform, TerrainData leftNeighbour = null, TerrainData downNeighbour = null)
     {
         AddWater(terrainData, transform);
         //AddShoreline(terrainData, transform);

@@ -11,7 +11,13 @@ public class SO_MPD : BaseTerrainGeneration
     public int roughness = 2;
     public int smoothIterations = 1;
 
-    public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset)
+    BaseTerrainGeneration leftNeighbour;
+    BaseTerrainGeneration upNeighbour;
+    BaseTerrainGeneration rightNeighbour;
+    BaseTerrainGeneration downNeighbour;
+
+    public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset,
+        SO_PerlinValues leftPerlinValues = null, TerrainData upNeighbour = null)
     {
         int width = terrainData.heightmapResolution - 1;
         int squareSize = width;
@@ -94,5 +100,14 @@ public class SO_MPD : BaseTerrainGeneration
         heightDampenerPower = mpdHeightDampenerPower;
         roughness = mpdRoughness;
         smoothIterations = mpdSmoothIterations;
+    }
+
+    public override void SetNeighbours(BaseTerrainGeneration leftNeighbour = null, BaseTerrainGeneration upNeighbour = null,
+        BaseTerrainGeneration rightNeighbour = null, BaseTerrainGeneration downNeighbour = null)
+    {
+        this.leftNeighbour = leftNeighbour;
+        this.upNeighbour = upNeighbour;
+        this.rightNeighbour = rightNeighbour;
+        this.downNeighbour = downNeighbour;
     }
 }

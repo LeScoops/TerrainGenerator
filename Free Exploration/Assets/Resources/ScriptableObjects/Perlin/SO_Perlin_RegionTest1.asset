@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d628ac96aca2d0c43a7bcbea76da5861, type: 3}
   m_Name: SO_Perlin_RegionTest1
   m_EditorClassIdentifier: 
-  perlinXScale: 0.01
-  perlinYScale: 0.01
+  perlinXScale: 0.003
+  perlinYScale: 0.003
   perlinOctaves: 3
   perlinPersistance: 8
   perlinHeightScale: 0.09

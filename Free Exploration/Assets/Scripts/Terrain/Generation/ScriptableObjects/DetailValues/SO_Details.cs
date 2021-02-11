@@ -30,7 +30,7 @@ public class SO_Details : BaseDetailsGeneration
         new Detail()
     };
 
-    public override void Generate(TerrainData terrainData, Transform parentTransform)
+    public override void Generate(TerrainData terrainData, Transform parentTransform, TerrainData leftNeighbour = null, TerrainData downNeighbour = null)
     {
         DetailPrototype[] newDetailPrototypes;
         newDetailPrototypes = new DetailPrototype[details.Count];
