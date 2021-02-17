@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class BaseTerrainGeneration : ScriptableObject
 {
     public abstract void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset,
-        SO_PerlinValues leftPerlinValues = null, TerrainData upNeighbour = null);
+        GameObject leftTerrain = null, GameObject upNeighbour = null);
 
     public abstract void SetNeighbours(BaseTerrainGeneration leftNeighbour = null, BaseTerrainGeneration upNeighbour = null,
         BaseTerrainGeneration rightNeighbour = null, BaseTerrainGeneration downNeighbour = null);    

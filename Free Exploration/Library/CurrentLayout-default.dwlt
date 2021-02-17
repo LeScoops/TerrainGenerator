@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Scene
+  m_Title: Hierarchy
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 392}
   m_MaxSize: {x: 10000, y: 10000}
@@ -46,7 +46,7 @@ MonoBehaviour:
     y: 0
     width: 1920
     height: 997
-  m_MinSize: {x: 875, y: 300}
+  m_MinSize: {x: 875, y: 392}
   m_MaxSize: {x: 10000, y: 10000}
   m_UseTopView: 1
   m_TopViewHeight: 30
@@ -124,7 +124,7 @@ MonoBehaviour:
   m_MinSize: {x: 908, y: 342}
   m_MaxSize: {x: 22003, y: 10021}
   vertical: 0
-  controlID: 148
+  controlID: 173
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -149,7 +149,7 @@ MonoBehaviour:
   m_MinSize: {x: 201, y: 342}
   m_MaxSize: {x: 4001, y: 8042}
   vertical: 1
-  controlID: 149
+  controlID: 129
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -409,9 +409,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 1101.6578, y: -438.23627, z: 1341.7008}
+    m_Target: {x: 1180.4706, y: -413.572, z: 1674.4004}
     speed: 2
-    m_Value: {x: 1101.6578, y: -438.23627, z: 1341.7008}
+    m_Value: {x: 1180.4706, y: -413.572, z: 1674.4004}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -458,9 +458,9 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.17950037, y: -0.014501483, z: -0.0003722689, w: -0.984464}
+    m_Target: {x: -0.25974953, y: -0.05037865, z: 0.011833649, w: -0.9651632}
     speed: 2
-    m_Value: {x: -0.17640306, y: -0.0115360115, z: -0.0009447628, w: -0.98425}
+    m_Value: {x: -0.2595306, y: -0.05033619, z: 0.011823676, w: -0.96434975}
   m_Size:
     m_Target: 789.7527
     speed: 2
@@ -541,7 +541,7 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 14472
+  m_LastSelectedObjectID: -4366
 --- !u!114 &16
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -667,8 +667,8 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 88380000
-      m_LastClickedID: 14472
+      m_SelectedIDs: 
+      m_LastClickedID: 0
       m_ExpandedIDs: 62fbffff88380000
       m_RenameOverlay:
         m_UserAcceptedRename: 0

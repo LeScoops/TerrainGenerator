@@ -19,7 +19,7 @@ public class SO_Voronoi : BaseTerrainGeneration
     BaseTerrainGeneration downNeighbour;
 
     public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset,
-        SO_PerlinValues leftPerlinValues = null, TerrainData upNeighbour = null)
+        GameObject leftTerrain = null, GameObject upNeighbour = null)
     {
         for (int p = 0; p < vPeakCount; p++)
         {

@@ -17,7 +17,7 @@ public class SO_MPD : BaseTerrainGeneration
     BaseTerrainGeneration downNeighbour;
 
     public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset,
-        SO_PerlinValues leftPerlinValues = null, TerrainData upNeighbour = null)
+        GameObject leftTerrain = null, GameObject upNeighbour = null)
     {
         int width = terrainData.heightmapResolution - 1;
         int squareSize = width;

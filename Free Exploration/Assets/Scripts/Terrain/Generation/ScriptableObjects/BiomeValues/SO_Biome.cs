@@ -10,11 +10,11 @@ public class SO_Biome : ScriptableObject
     public List<BaseDetailsGeneration> listOfDetailsGeneration = null;
 
     public void Generate(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset,
-        SO_PerlinValues leftPerlinValues = null, TerrainData downNeighbour = null)
+        GameObject leftTerrain = null, GameObject downNeighbour = null)
     {
         if (terrainGenerationValues)
         {
-            terrainGenerationValues.GenerateTerrain(terrainData, heightMap, givenTransform, offset, leftPerlinValues);
+            terrainGenerationValues.GenerateTerrain(terrainData, heightMap, givenTransform, offset, leftTerrain, downNeighbour);
         }
         if (listOfDetailsGeneration.Count != 0)
         {

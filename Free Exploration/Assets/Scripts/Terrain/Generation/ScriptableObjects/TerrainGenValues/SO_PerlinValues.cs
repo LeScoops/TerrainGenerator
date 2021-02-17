@@ -21,27 +21,30 @@ public class SO_PerlinValues : BaseTerrainGeneration
     BaseTerrainGeneration downNeighbour;
 
     public override void GenerateTerrain(TerrainData terrainData, float[,] heightMap, Transform givenTransform, Vector2 offset,
-        SO_PerlinValues leftPerlinValues = null, TerrainData upNeighbour = null)
+        GameObject leftTerrain = null, GameObject downNeighbour = null)
     {        
         float[,] leftHeightMap = new float[1, 1];
+        float[,] downHeightMap = new float[1, 1];
         float[,] tempHeightMap = new float[1, 1];
+        float blendAmount = 0.2f;
 
-        //if (leftPerlinValues)
-        //{
-        //    Debug.Log("left - " + leftPerlinValues.perlinXScale);
-        //    Debug.Log("right - " + perlinXScale);
-        //}
+        SO_PerlinValues leftPerlinValues = null;
+        if (leftTerrain)
+        {
+            leftPerlinValues = leftTerrain.GetComponent<PerlinValueHolder>().GetPerlinValues();
+        }
+        SO_PerlinValues downPerlinValues = null;
+        if (downNeighbour)
+        {
+            downPerlinValues = downNeighbour.GetComponent<PerlinValueHolder>().GetPerlinValues();
+        }
 
         for (int x = 0; x < terrainData.heightmapResolution; x++)
         {
             for (int z = 0; z < terrainData.heightmapResolution; z++)
             {
-                //modifiedPerlinYScale = (leftPerlinValues.perlinYScale * (1 - (z / terrainData.heightmapResolution))) +
-                //   perlinYScale * (z / terrainData.heightmapResolution);
-                    
                 if (leftPerlinValues)
                 {
-
                     tempHeightMap[0, 0] = TerrainUtils.fBM(
                         (x + offset.x) * perlinXScale,
                         (z + offset.y) * perlinYScale,
@@ -56,20 +59,37 @@ public class SO_PerlinValues : BaseTerrainGeneration
 
                     float finalHeight = tempHeightMap[0,0];
 
-                    if (z < terrainData.heightmapResolution / 6)
+                    if (z < terrainData.heightmapResolution * blendAmount)
                         finalHeight = tempHeightMap[0,0] * (z * 0.01f) + leftHeightMap[0,0] * (1 - z * 0.01f);
 
-                    //Debug.Log("1 Temp Height - " + tempHeightMap[0, 0]);
-                    //Debug.Log("2 Left Height - " + leftHeightMap[0, 0]);
-                    //Debug.Log("3 Final Height - " + finalHeight);
+                    heightMap[x, z] += finalHeight;
+                }
+                if (downPerlinValues)
+                {
+                    tempHeightMap[0, 0] = TerrainUtils.fBM(
+                        (x + offset.x) * perlinXScale,
+                        (z + offset.y) * perlinYScale,
+                        perlinOctaves,
+                        perlinPersistance) * perlinHeightScale;
+
+                    downHeightMap[0, 0] = TerrainUtils.fBM(
+                        (x + offset.x) * downPerlinValues.perlinXScale,
+                        (z + offset.y) * downPerlinValues.perlinYScale,
+                        downPerlinValues.perlinOctaves,
+                        downPerlinValues.perlinPersistance) * downPerlinValues.perlinHeightScale;
+
+                    float finalHeight = tempHeightMap[0, 0];
+
+                    if (x < terrainData.heightmapResolution * blendAmount)
+                        finalHeight = tempHeightMap[0, 0] * (x * 0.01f) + downHeightMap[0, 0] * (1 - x * 0.01f);
 
                     heightMap[x, z] += finalHeight;
                 }
                 else
                 {
                     heightMap[x, z] += TerrainUtils.fBM(
-                        (x + offset.x ) * perlinXScale,
-                        (z + offset.y ) * perlinYScale, 
+                        (x + offset.x) * perlinXScale,
+                        (z + offset.y) * perlinYScale,
                         perlinOctaves,
                         perlinPersistance) * perlinHeightScale;
                 }

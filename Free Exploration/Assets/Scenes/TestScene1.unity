@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   testRegion: 0
-  regionDimensions: {x: 2, y: 1}
+  regionDimensions: {x: 2, y: 2}
   biomes:
   - {fileID: 11400000, guid: 1acc881ed2285a740ab19ff87cedc91c, type: 2}
   - {fileID: 11400000, guid: 10aef441409c0284899d5e55da4722aa, type: 2}

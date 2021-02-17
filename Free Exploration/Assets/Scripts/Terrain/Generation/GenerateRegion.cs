@@ -31,6 +31,15 @@ public class GenerateRegion : MonoBehaviour
             ClearDictionary(regionDimensions);
         }
 
+        int[,] biomeIndex = new int[regionDimensions.x, regionDimensions.y];
+        for(int x = 0; x < regionDimensions.x; x++)
+        {
+            for (int z = 0; z < regionDimensions.y; z++)
+            {
+                biomeIndex[x,z] = Random.Range(0, biomes.Length);
+            }
+        }
+
         for (int x = 0; x < regionDimensions.x; x++)
         {
             for (int z = 0; z < regionDimensions.y; z++)
@@ -42,7 +51,7 @@ public class GenerateRegion : MonoBehaviour
                 terrainGameObject.AddComponent<PerlinValueHolder>();
 
                 //int biomeIndex = Random.Range(0, biomes.Length);
-                terrainGameObject.GetComponent<PerlinValueHolder>().SetPerlinValues(biomes[x].GetPerlinValues(), x);
+                terrainGameObject.GetComponent<PerlinValueHolder>().SetPerlinValues(biomes[biomeIndex[x,z]].GetPerlinValues(), biomeIndex[x,z]);
 
                 Terrain terrain = terrainGameObject.GetComponent<Terrain>();
                 terrain.materialTemplate = defaultMaterial;
@@ -58,23 +67,33 @@ public class GenerateRegion : MonoBehaviour
                 terrainGameObject.transform.SetParent(this.transform);
                 terrainGameObject.transform.position = new Vector3(terrainData.size.x * x, 0, terrainData.size.z * z);
 
-                SO_PerlinValues leftPerlinValues = null;
+                terrainDictionary.Add(terrainData.name, terrainGameObject);
+            }
+        }
+
+        for (int x = 0; x < regionDimensions.x; x++)
+        {
+            for (int z = 0; z < regionDimensions.y; z++)
+            {
+                TerrainData terrainData = terrainDictionary[x.ToString() + z.ToString()].GetComponent<Terrain>().terrainData;
+                GameObject leftTerrain = null;
+                GameObject downNeighbour = null;
                 Vector2 offset = new Vector2(seed + terrainData.size.z / 2 * z, seed + terrainData.size.x / 2 * x);
 
-                if (x > 0)
-                {
-                    int leftNeighbourIndex = x - 1;
-                    leftPerlinValues = terrainDictionary[leftNeighbourIndex.ToString() + z.ToString()].GetComponent<PerlinValueHolder>().GetPerlinValues();
-                    biomes[x].Generate(terrainData, terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution),
-                        this.transform, offset, leftPerlinValues);
-                }
-                else
-                {
-                    biomes[x].Generate(terrainData, terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution),
-                        this.transform, offset);
-                }
+                //if (z > 0)
+                //{
+                //    int downNeighbourIndex = z - 1;
+                //    downNeighbour = terrainDictionary[x.ToString() + downNeighbourIndex.ToString()];
+                //}
 
-                terrainDictionary.Add(terrainData.name, terrainGameObject);
+                //if (x > 0)
+                //{
+                //    int leftNeighbourIndex = x - 1;
+                //    leftTerrain = terrainDictionary[leftNeighbourIndex.ToString() + z.ToString()];
+                //}
+
+                biomes[biomeIndex[x, z]].Generate(terrainData, terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution),
+                    this.transform, offset, leftTerrain, downNeighbour);
             }
         }
     }
